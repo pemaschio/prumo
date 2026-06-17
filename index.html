@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prumo · A plataforma de compra inteligente do profissional de obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f7f5;
+  --surface:#ffffff;
+  --ink:#16140f;
+  --ink-2:#52504a;
+  --ink-3:#8a877f;
+  --line:#e7e5e0;
+  --line-2:#d8d6d0;
+  --amber:#e8821e;
+  --amber-deep:#c96a0f;
+  --amber-tint:#fdf2e3;
+  --graphite:#1c1a16;
+  --graphite-2:#27241e;
+  --money:#1f9d6b;
+  --money-tint:#e7f5ee;
+  --radius:16px;
+  --radius-sm:10px;
+  --maxw:1240px;
+  --shadow:0 1px 2px rgba(28,26,22,.04),0 8px 30px rgba(28,26,22,.06);
+  --shadow-lg:0 2px 6px rgba(28,26,22,.06),0 24px 60px rgba(28,26,22,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+.mono{font-family:'DM Mono',monospace;font-feature-settings:"tnum"}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+section{position:relative}
+
+/* ---------- NAV ---------- */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(247,247,245,.82);
+  backdrop-filter:saturate(160%) blur(14px);
+  -webkit-backdrop-filter:saturate(160%) blur(14px);
+  border-bottom:1px solid var(--line);
+  height:64px;display:flex;align-items:center;
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;width:100%}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand .mk{width:26px;height:26px;flex:none}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-2);transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:600;font-size:14.5px;border:none;cursor:pointer;
+  padding:11px 18px;border-radius:999px;transition:transform .12s ease,box-shadow .2s,background .2s;
+  font-family:inherit;
+}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--amber);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 6px 16px rgba(232,130,30,.28)}
+.btn-primary:hover{background:var(--amber-deep)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
+.btn-ghost:hover{border-color:var(--ink-3);background:#fff}
+.btn-dark{background:var(--graphite);color:#fff}
+.btn-dark:hover{background:#000}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{padding:74px 0 40px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:600;color:var(--amber-deep);
+  background:var(--amber-tint);border:1px solid #f5dcb6;
+  padding:6px 13px;border-radius:999px;letter-spacing:.01em;
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--money);box-shadow:0 0 0 3px var(--money-tint)}
+h1{
+  font-size:clamp(38px,5.4vw,62px);line-height:1.02;letter-spacing:-.035em;
+  font-weight:800;margin:22px 0 0;
+}
+h1 em{font-style:normal;color:var(--amber-deep);position:relative;white-space:nowrap}
+.hero p.lede{font-size:19px;color:var(--ink-2);margin:22px 0 0;max-width:30ch;line-height:1.45}
+.hero-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:26px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+.hero-meta .it{display:flex;flex-direction:column;gap:2px}
+.hero-meta .n{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.hero-meta .l{font-size:12.5px;color:var(--ink-3);font-weight:500}
+
+/* ---------- PHONE ---------- */
+.phone-stage{position:relative;display:flex;justify-content:center}
+.phone-stage::before{
+  content:"";position:absolute;inset:-8% -14%;z-index:0;
+  background:radial-gradient(60% 55% at 70% 30%,rgba(232,130,30,.16),transparent 70%);
+}
+.phone{
+  position:relative;z-index:1;width:312px;height:638px;
+  background:var(--graphite);border-radius:42px;padding:11px;
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(0,0,0,.04);
+}
+.phone-screen{width:100%;height:100%;background:#e9e4dc;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.wa-head{background:#0b8b74;color:#fff;padding:13px 14px 12px;display:flex;align-items:center;gap:11px;flex:none}
+.wa-ava{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.wa-ava svg{width:22px;height:22px}
+.wa-name{font-size:14.5px;font-weight:700;line-height:1.2}
+.wa-status{font-size:11px;opacity:.85;display:flex;align-items:center;gap:5px}
+.wa-status .on{width:6px;height:6px;border-radius:50%;background:#7ff0c4}
+.wa-body{flex:1;overflow-y:auto;padding:14px 12px;background:#ece5dd;background-image:linear-gradient(rgba(236,229,221,.92),rgba(236,229,221,.92));display:flex;flex-direction:column;gap:9px;scrollbar-width:thin}
+.wa-body::-webkit-scrollbar{width:0}
+.msg{max-width:86%;font-size:13px;line-height:1.42;padding:8px 11px;border-radius:12px;position:relative;box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.msg.in{background:#fff;align-self:flex-start;border-top-left-radius:3px}
+.msg.out{background:#dcf8c6;align-self:flex-end;border-top-right-radius:3px}
+.msg .t{font-size:9.5px;color:#9a978f;text-align:right;margin-top:3px}
+.offer{
+  background:#fff;border-radius:13px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.09);
+  align-self:flex-start;max-width:90%;
+}
+.offer-img{height:96px;background:#f0ece4;position:relative;display:flex;align-items:center;justify-content:center}
+.offer-img svg{width:54px;height:54px;opacity:.5}
+.offer-tag{position:absolute;top:8px;left:8px;background:var(--money);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px;font-family:'DM Mono',monospace}
+.offer-store{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;font-size:9.5px;font-weight:600;padding:3px 7px;border-radius:6px}
+.offer-b{padding:9px 11px 11px}
+.offer-t{font-size:12.5px;font-weight:600;line-height:1.25;color:#1c1a16}
+.offer-price{display:flex;align-items:baseline;gap:7px;margin-top:6px}
+.offer-price .p{font-size:15px;font-weight:800;font-family:'DM Mono',monospace}
+.offer-price .o{font-size:11px;color:#b3b0a8;text-decoration:line-through;font-family:'DM Mono',monospace}
+.offer-cb{font-size:11px;color:var(--money);font-weight:700;margin-top:4px;display:flex;align-items:center;gap:5px}
+.offer-btn{margin-top:9px;background:#0b8b74;color:#fff;text-align:center;font-size:11.5px;font-weight:700;padding:7px;border-radius:8px}
+.typing{align-self:flex-start;background:#fff;padding:10px 13px;border-radius:12px;border-top-left-radius:3px;display:flex;gap:4px;box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.typing span{width:6px;height:6px;border-radius:50%;background:#b9b6ae;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.wa-foot{flex:none;background:#f0f0f0;padding:8px 10px;display:flex;gap:8px;align-items:center}
+.wa-input{flex:1;background:#fff;border-radius:999px;padding:8px 13px;font-size:12px;color:#9a978f}
+.wa-send{width:34px;height:34px;border-radius:50%;background:#0b8b74;display:flex;align-items:center;justify-content:center;flex:none}
+.wa-send svg{width:17px;height:17px}
+
+/* ---------- LOGO STRIP ---------- */
+.logos{padding:30px 0 8px}
+.logos .lab{text-align:center;font-size:12.5px;color:var(--ink-3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:20px}
+.logo-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px;align-items:center;opacity:.9}
+.logo-row .lg{font-weight:800;font-size:16.5px;color:var(--ink-2);letter-spacing:-.01em;display:flex;align-items:center;gap:7px}
+.logo-row .lg svg{width:18px;height:18px}
+
+/* ---------- SECTION SHELL ---------- */
+.sec{padding:84px 0}
+.sec-head{max-width:62ch}
+.sec-tag{font-size:13px;font-weight:700;color:var(--amber-deep);letter-spacing:.02em}
+h2{font-size:clamp(28px,3.7vw,42px);line-height:1.06;letter-spacing:-.03em;font-weight:800;margin:14px 0 0}
+.sec-head p{font-size:17.5px;color:var(--ink-2);margin:16px 0 0;line-height:1.5}
+
+/* ---------- PROBLEM ---------- */
+.problem{background:var(--graphite);color:#f3efe7}
+.problem h2{color:#fff}
+.problem .sec-tag{color:var(--amber)}
+.problem .sec-head p{color:#b8b3a8}
+.prob-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:46px}
+.prob-card{background:var(--graphite-2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:26px}
+.prob-card .ic{width:42px;height:42px;border-radius:11px;background:rgba(232,130,30,.14);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.prob-card .ic svg{width:22px;height:22px;color:var(--amber)}
+.prob-card h3{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.prob-card p{font-size:14.5px;color:#a8a399;margin-top:9px;line-height:1.5}
+.prob-card .stat{font-family:'DM Mono',monospace;font-size:30px;font-weight:500;color:#fff;margin-bottom:4px;letter-spacing:-.02em}
+.prob-card.big{grid-column:span 6}
+.prob-card.sm{grid-column:span 3}
+.prob-card.wide{grid-column:span 12;display:flex;gap:30px;align-items:center;background:linear-gradient(100deg,var(--graphite-2),#332f27)}
+.prob-card.wide .qt{font-size:21px;font-weight:600;line-height:1.4;color:#fff;letter-spacing:-.01em}
+.prob-card.wide .qt b{color:var(--amber)}
+
+/* ---------- HOW / PRODUTO ---------- */
+.feat{position:relative}
+.feat-row{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding:48px 0;border-top:1px solid var(--line)}
+.feat-row.rev .feat-visual{order:-1}
+.feat-num{font-family:'DM Mono',monospace;font-size:13px;color:var(--amber-deep);font-weight:500}
+.feat-row h3{font-size:27px;font-weight:800;letter-spacing:-.025em;margin:10px 0 0;line-height:1.1}
+.feat-row p{font-size:16px;color:var(--ink-2);margin:14px 0 0;line-height:1.55;max-width:46ch}
+.feat-list{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.feat-list .li{display:flex;gap:11px;font-size:14.5px;color:var(--ink)}
+.feat-list .li svg{width:19px;height:19px;color:var(--money);flex:none;margin-top:1px}
+.feat-visual{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;min-height:240px;position:relative;overflow:hidden}
+
+/* mini offer cards inside visual */
+.mini-offers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px}
+.mini .mt{font-size:12px;font-weight:600;line-height:1.25;height:30px;overflow:hidden}
+.mini .mp{font-family:'DM Mono',monospace;font-weight:700;font-size:14px;margin-top:8px}
+.mini .mc{font-size:10.5px;color:var(--money);font-weight:700;margin-top:3px}
+.mini .ms{font-size:9.5px;color:var(--ink-3);margin-top:6px;border-top:1px solid var(--line);padding-top:6px}
+
+/* ---------- AGENT DEMO ---------- */
+.agent{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.agent-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:start;margin-top:40px}
+.chat{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;height:520px}
+.chat-head{background:var(--graphite);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:11px;flex:none}
+.chat-head .ava{width:34px;height:34px;border-radius:9px;background:var(--amber);display:flex;align-items:center;justify-content:center}
+.chat-head .ava svg{width:19px;height:19px;color:#fff}
+.chat-head .nm{font-size:14.5px;font-weight:700}
+.chat-head .st{font-size:11px;color:#9c9b97;display:flex;align-items:center;gap:5px}
+.chat-head .st .on{width:6px;height:6px;border-radius:50%;background:var(--money)}
+.chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin}
+.chat-body::-webkit-scrollbar{width:5px}.chat-body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
+.cmsg{max-width:84%;font-size:14px;line-height:1.5;padding:11px 14px;border-radius:14px}
+.cmsg.bot{background:#fff;border:1px solid var(--line);align-self:flex-start;border-top-left-radius:4px}
+.cmsg.user{background:var(--graphite);color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.cmsg.bot b{color:var(--amber-deep)}
+.crec{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;align-self:flex-start;max-width:92%;width:92%}
+.crec .ct{font-size:11px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.crec-item{display:flex;gap:11px;padding:9px 0;border-top:1px solid var(--line)}
+.crec-item:first-of-type{border-top:none}
+.crec-thumb{width:44px;height:44px;border-radius:9px;background:#f0ece4;flex:none;display:flex;align-items:center;justify-content:center}
+.crec-thumb svg{width:24px;height:24px;opacity:.5}
+.crec-info{flex:1;min-width:0}
+.crec-info .n{font-size:12.5px;font-weight:600;line-height:1.25}
+.crec-info .meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.crec-info .pr{font-family:'DM Mono',monospace;font-weight:700;font-size:13px}
+.crec-info .cb{font-size:10.5px;color:var(--money);font-weight:700;background:var(--money-tint);padding:2px 6px;border-radius:5px}
+.crec-info .sg{font-size:10px;color:var(--ink-3)}
+.crec-total{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line-2);display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
+.crec-total b{font-family:'DM Mono',monospace;font-size:14px}
+.crec-total .cbk{color:var(--money);font-weight:700}
+.chat-foot{flex:none;border-top:1px solid var(--line);padding:12px;background:#fff}
+.chat-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:12px;font-weight:600;color:var(--ink-2);background:var(--bg);border:1px solid var(--line-2);padding:7px 12px;border-radius:999px;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--amber);color:var(--amber-deep);background:var(--amber-tint)}
+.chat-inrow{display:flex;gap:9px}
+.chat-input{flex:1;border:1px solid var(--line-2);border-radius:999px;padding:11px 16px;font-size:14px;font-family:inherit;outline:none;transition:border .15s}
+.chat-input:focus{border-color:var(--amber)}
+.chat-input::placeholder{color:var(--ink-3)}
+.chat-sendb{width:42px;height:42px;border-radius:50%;background:var(--amber);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;transition:background .15s}
+.chat-sendb:hover{background:var(--amber-deep)}
+.chat-sendb svg{width:19px;height:19px;color:#fff}
+.agent-copy h3{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.agent-copy p{font-size:16px;color:var(--ink-2);margin-top:14px;line-height:1.55}
+.agent-steps{margin-top:26px;display:flex;flex-direction:column;gap:2px}
+.astep{display:flex;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.astep .k{font-family:'DM Mono',monospace;font-size:13px;color:var(--amber-deep);font-weight:500;flex:none;width:24px}
+.astep .x h4{font-size:15.5px;font-weight:700}
+.astep .x p{font-size:13.5px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+
+/* ---------- SIMULATOR ---------- */
+.sim-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:50px;align-items:center;margin-top:42px}
+.sim-controls{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}
+.sim-ctl{margin-bottom:28px}
+.sim-ctl:last-child{margin-bottom:0}
+.sim-ctl .lab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:13px}
+.sim-ctl .lab .t{font-size:14.5px;font-weight:600}
+.sim-ctl .lab .v{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--amber-deep)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;background:var(--line);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(232,130,30,.4)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(232,130,30,.4)}
+.sim-hint{font-size:12px;color:var(--ink-3);margin-top:9px}
+.sim-out{display:flex;flex-direction:column;gap:14px}
+.sim-prof{background:var(--money-tint);border:1px solid #bfe6d2;border-radius:var(--radius);padding:24px}
+.sim-prof .h{font-size:13px;font-weight:700;color:#137a52;text-transform:uppercase;letter-spacing:.03em}
+.sim-prof .big{font-family:'DM Mono',monospace;font-size:42px;font-weight:500;color:#137a52;letter-spacing:-.02em;margin:6px 0 2px}
+.sim-prof .sub{font-size:13.5px;color:#2c8a63}
+.sim-rows{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 22px;box-shadow:var(--shadow)}
+.sim-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.sim-row:last-child{border-bottom:none}
+.sim-row .k{color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.sim-row .val{font-family:'DM Mono',monospace;font-weight:500;font-size:16px}
+.sim-row.tot .k{font-weight:700;color:var(--ink)}
+.sim-row.tot .val{color:var(--amber-deep);font-weight:500;font-size:18px}
+.dotk{width:8px;height:8px;border-radius:2px;flex:none}
+
+/* ---------- MARKET ---------- */
+.market{background:var(--graphite);color:#f3efe7}
+.market h2{color:#fff}.market .sec-tag{color:var(--amber)}.market .sec-head p{color:#b8b3a8}
+.tam{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:46px}
+.tam-card{background:var(--graphite-2);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden}
+.tam-card .ring{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;border:14px solid rgba(232,130,30,.1)}
+.tam-card .lvl{font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--amber)}
+.tam-card .num{font-family:'DM Mono',monospace;font-size:40px;font-weight:500;color:#fff;letter-spacing:-.02em;margin:10px 0 4px}
+.tam-card .dsc{font-size:14px;color:#a8a399;line-height:1.45;position:relative;z-index:1}
+.tam-card.sam{background:linear-gradient(160deg,#2a261f,#34302700)}
+.tam-card.som{background:linear-gradient(160deg,#3a2f1d,#27241e)}
+.market-foot{margin-top:20px;font-size:13px;color:#8d8a82;font-family:'DM Mono',monospace}
+
+/* gap table */
+.gap{margin-top:50px}
+.gap h3{color:#fff;font-size:20px;font-weight:700;margin-bottom:20px}
+.gap-tbl{width:100%;border-collapse:collapse;background:var(--graphite-2);border-radius:var(--radius);overflow:hidden}
+.gap-tbl th,.gap-tbl td{padding:15px 18px;text-align:center;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,.06)}
+.gap-tbl th{font-size:12px;font-weight:600;color:#9c988f;text-transform:uppercase;letter-spacing:.03em;background:rgba(0,0,0,.18)}
+.gap-tbl td:first-child,.gap-tbl th:first-child{text-align:left;font-weight:600;color:#fff}
+.gap-tbl .yes{color:var(--money);font-weight:700}
+.gap-tbl .no{color:#6f6a61}
+.gap-tbl tr.us{background:rgba(232,130,30,.1)}
+.gap-tbl tr.us td:first-child{color:var(--amber)}
+.gap-tbl tr.us td{font-weight:600}
+
+/* ---------- UNIT ECON ---------- */
+.econ-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:42px}
+.econ-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.econ-card .l{font-size:13px;color:var(--ink-3);font-weight:600}
+.econ-card .n{font-family:'DM Mono',monospace;font-size:34px;font-weight:500;letter-spacing:-.02em;margin:8px 0 2px}
+.econ-card .d{font-size:12.5px;color:var(--ink-2)}
+.econ-card.hl{background:var(--graphite);border-color:var(--graphite)}
+.econ-card.hl .l{color:#9c988f}.econ-card.hl .n{color:var(--amber)}.econ-card.hl .d{color:#a8a399}
+.honest{margin-top:24px;background:var(--amber-tint);border:1px solid #f3d9b0;border-radius:var(--radius);padding:20px 24px;display:flex;gap:14px}
+.honest svg{width:22px;height:22px;color:var(--amber-deep);flex:none;margin-top:1px}
+.honest p{font-size:14px;color:#7a5418;line-height:1.5}
+.honest b{color:#5e3f10}
+
+/* scale table */
+.scale{margin-top:46px;overflow-x:auto}
+.scale table{width:100%;border-collapse:collapse;min-width:560px}
+.scale th,.scale td{padding:14px 16px;text-align:right;font-size:14px;border-bottom:1px solid var(--line)}
+.scale th:first-child,.scale td:first-child{text-align:left}
+.scale th{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;font-weight:600}
+.scale td{font-family:'DM Mono',monospace;font-weight:500}
+.scale td:first-child{font-family:'Inter';font-weight:600}
+.scale tr:hover td{background:var(--amber-tint)}
+.scale tr.feat-r td{background:var(--money-tint);font-weight:700}
+
+/* ---------- ROADMAP ---------- */
+.road{background:#fff;border-top:1px solid var(--line)}
+.road-track{margin-top:48px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.rphase{padding:0 22px;position:relative;border-left:1px solid var(--line)}
+.rphase:first-child{padding-left:0;border-left:none}
+.rphase .bar{height:6px;border-radius:999px;margin-bottom:18px}
+.rphase.p1 .bar{background:var(--money)}
+.rphase.p2 .bar{background:var(--amber)}
+.rphase.p3 .bar{background:#c98a3f}
+.rphase.p4 .bar{background:var(--line-2)}
+.rphase .wk{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink-3);font-weight:500}
+.rphase h4{font-size:17px;font-weight:800;letter-spacing:-.01em;margin:6px 0 3px}
+.rphase .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;display:inline-block;margin-bottom:12px}
+.rphase.p1 .tag{background:var(--money-tint);color:#137a52}
+.rphase.p2 .tag{background:var(--amber-tint);color:var(--amber-deep)}
+.rphase.p3 .tag{background:#f6ecdf;color:#9b6a23}
+.rphase.p4 .tag{background:var(--bg);color:var(--ink-3)}
+.rphase ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.rphase li{font-size:13.5px;color:var(--ink-2);line-height:1.4;display:flex;gap:9px}
+.rphase li svg{width:15px;height:15px;flex:none;margin-top:2px;color:var(--ink-3)}
+.road-note{margin-top:36px;padding-top:24px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink-2);max-width:70ch}
+.road-note b{color:var(--ink)}
+
+/* ---------- ASK / CTA ---------- */
+.ask{background:var(--graphite);color:#fff;border-radius:28px;padding:64px;margin:60px 0;position:relative;overflow:hidden}
+.ask::before{content:"";position:absolute;right:-8%;top:-30%;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(232,130,30,.22),transparent 65%)}
+.ask-in{position:relative;z-index:1;max-width:760px}
+.ask h2{color:#fff;font-size:clamp(30px,4vw,46px)}
+.ask p{font-size:18px;color:#bdb8ad;margin-top:20px;line-height:1.55;max-width:56ch}
+.ask-points{display:flex;gap:36px;margin-top:34px;flex-wrap:wrap}
+.ask-points .it .n{font-family:'DM Mono',monospace;font-size:26px;font-weight:500;color:var(--amber)}
+.ask-points .it .l{font-size:13px;color:#a8a399;margin-top:2px}
+.ask-cta{display:flex;gap:13px;margin-top:38px;flex-wrap:wrap}
+
+/* ---------- FOOTER ---------- */
+footer{padding:46px 0;border-top:1px solid var(--line)}
+.foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.foot-meta{font-size:13px;color:var(--ink-3);line-height:1.6}
+.foot-meta b{color:var(--ink-2)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .phone-stage{order:-1}
+  .agent-grid,.sim-grid{grid-template-columns:1fr;gap:34px}
+  .feat-row{grid-template-columns:1fr;gap:26px}
+  .feat-row.rev .feat-visual{order:0}
+  .tam,.road-track{grid-template-columns:1fr}
+  .econ-grid{grid-template-columns:1fr 1fr}
+  .prob-card.big,.prob-card.sm{grid-column:span 12}
+  .rphase{border-left:none;border-top:1px solid var(--line);padding:24px 0 0}
+  .rphase:first-child{padding-top:0;border-top:none}
+  .ask{padding:40px 26px;border-radius:20px}
+}
+@media(max-width:560px){
+  .wrap{padding:0 18px}
+  .hero-meta{flex-wrap:wrap;gap:18px}
+  .econ-grid{grid-template-columns:1fr}
+  .prob-card.wide{flex-direction:column;align-items:flex-start;gap:16px}
+}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.typing span{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap nav-in">
+    <div class="brand">
+      <svg class="mk" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 6l8 4.5v9L16 24l-8-4.5v-9L16 6z" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 6v18M8 10.5l8 4.5 8-4.5" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg>
+      Prumo
+    </div>
+    <div class="nav-links">
+      <a href="#produto">Produto</a>
+      <a href="#agente">Agente IA</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#mercado">Mercado</a>
+      <a href="#roadmap">Roadmap</a>
+    </div>
+    <a href="#ask" class="btn btn-dark">Oportunidade</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy rv in">
+      <span class="eyebrow"><span class="dot"></span>Compra inteligente para quem vive de obra</span>
+      <h1>O profissional de obra compra muito. E não ganha <em>nada</em> de volta.</h1>
+      <p class="lede">A Prumo transforma cada compra de material em cashback real, no canal que ele já usa todo dia: o WhatsApp.</p>
+      <div class="hero-cta">
+        <a href="#produto" class="btn btn-primary">Ver o produto funcionando
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#ask" class="btn btn-ghost">A oportunidade</a>
+      </div>
+      <div class="hero-meta">
+        <div class="it"><span class="n mono">R$ 250 bi</span><span class="l">varejo de material/ano no Brasil</span></div>
+        <div class="it"><span class="n mono">5-7 mi</span><span class="l">profissionais autônomos</span></div>
+        <div class="it"><span class="n mono">147 mi</span><span class="l">brasileiros no WhatsApp</span></div>
+      </div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="phone-stage rv in">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="wa-head">
+            <div class="wa-ava"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 7l7 4v8l-7 4-7-4v-8l7-4z" stroke="#e8821e" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg></div>
+            <div><div class="wa-name">Prumo</div><div class="wa-status"><span class="on"></span>online</div></div>
+          </div>
+          <div class="wa-body" id="waBody">
+            <div class="msg in">Bom dia, Caio! 👷 Achei o porcelanato que você pediu ontem com preço melhor hoje.<div class="t">08:14</div></div>
+            <div class="offer">
+              <div class="offer-img">
+                <span class="offer-tag">-12%</span><span class="offer-store">Leroy Merlin</span>
+                <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="13" y="3" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="3" y="13" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="13" y="13" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/></svg>
+              </div>
+              <div class="offer-b">
+                <div class="offer-t">Porcelanato Acetinado Bege 60×60 · Caixa 2,32m²</div>
+                <div class="offer-price"><span class="p">R$ 54,90</span><span class="o">R$ 62,40</span><span style="font-size:10px;color:#b3b0a8">/m²</span></div>
+                <div class="offer-cb"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="#1f9d6b" stroke-width="2" stroke-linecap="round"/></svg>R$ 8,90 de cashback</div>
+                <div class="offer-btn">Comprar e ativar cashback</div>
+              </div>
+            </div>
+            <div class="msg out">Boa! Me vê argamassa pra assentar também<div class="t">08:15 ✓✓</div></div>
+            <div class="typing" id="waTyping"><span></span><span></span><span></span></div>
+          </div>
+          <div class="wa-foot">
+            <div class="wa-input">Mensagem</div>
+            <div class="wa-send"><svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGO STRIP -->
+  <div class="wrap logos rv">
+    <div class="lab">Catálogo conectado às maiores redes de material do país</div>
+    <div class="logo-row">
+      <span class="lg">Leroy Merlin</span>
+      <span class="lg">Mercado Livre</span>
+      <span class="lg">MadeiraMadeira</span>
+      <span class="lg">Ferramentas Kennedy</span>
+      <span class="lg">Amazon</span>
+      <span class="lg">Telhanorte</span>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section class="problem sec">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">O dinheiro que escorre pelo ralo</div>
+      <h2>Ele move R$ 450 mil em material por ano. E não tem nenhuma vantagem por isso.</h2>
+      <p>O profissional autônomo de obra é um comprador de alto volume tratado como consumidor avulso. Compra no balcão, paga o preço de etiqueta e nunca vê um centavo voltar.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="prob-card big rv">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat mono">R$ 0</div>
+        <h3>Zero recompensa sobre o maior gasto da carreira</h3>
+        <p>Programas de fidelidade do varejo de construção são fracos, fragmentados e desenhados para o consumidor final, não para quem compra toneladas de material todo mês.</p>
+      </div>
+      <div class="prob-card sm rv">
+        <div class="stat mono">3-5h</div>
+        <h3>cotando preço por semana</h3>
+        <p>Abrindo abas, ligando, comparando loja por loja, sem ferramenta única.</p>
+      </div>
+      <div class="prob-card sm rv">
+        <div class="stat mono">∞</div>
+        <h3>fornecedores soltos</h3>
+        <p>Cada loja tem seu app, seu preço e seu prazo. Nada conversa entre si.</p>
+      </div>
+      <div class="prob-card wide rv">
+        <div class="qt">"O pedreiro decide o que comprar e onde comprar. <b>Mas é o varejo que fica com todo o ganho da relação.</b> A Prumo devolve parte desse valor para quem realmente gera a venda."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUTO / HOW -->
+<section class="sec feat" id="produto">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Como a Prumo funciona</div>
+      <h2>Começamos enxutos, no WhatsApp. A robustez vem depois.</h2>
+      <p>A primeira versão não pede que ninguém mude de hábito. A Prumo entra no canal que o profissional já abre cem vezes por dia e entrega ofertas, busca por demanda e cashback sem fricção.</p>
+    </div>
+
+    <div class="feat-row rv">
+      <div class="feat-txt">
+        <span class="feat-num mono">MVP 01 · Semanas 1-2</span>
+        <h3>Feed de ofertas e conteúdo no WhatsApp</h3>
+        <p>Um canal curado com as melhores ofertas de material e ferramenta do dia, mais conteúdo técnico de obra. Cada link é monetizado por afiliação, gerando receita desde o primeiro envio, sem precisar de integração pesada.</p>
+        <div class="feat-list">
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ofertas reais com deeplink de afiliado (Awin + Mercado Livre)</div>
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Conteúdo de obra que cria hábito de abrir o canal</div>
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Receita validada antes de escrever uma linha de plataforma</div>
+        </div>
+      </div>
+      <div class="feat-visual">
+        <div class="mini-offers">
+          <div class="mini"><div class="mt">Furadeira Bosch GSB 13RE 650W</div><div class="mp mono">R$ 349</div><div class="mc">R$ 17,40 cashback</div><div class="ms">Mercado Livre · 4-8% comissão</div></div>
+          <div class="mini"><div class="mt">Cimento CP-II 50kg Votoran</div><div class="mp mono">R$ 38,50</div><div class="mc">R$ 1,90 cashback</div><div class="ms">Leroy Merlin · 6% comissão</div></div>
+          <div class="mini"><div class="mt">Tinta Acrílica Premium 18L Suvinil</div><div class="mp mono">R$ 289</div><div class="mc">R$ 14,45 cashback</div><div class="ms">Telhanorte · 5% comissão</div></div>
+          <div class="mini"><div class="mt">Argamassa AC-III 20kg Quartzolit</div><div class="mp mono">R$ 32,90</div><div class="mc">R$ 1,65 cashback</div><div class="ms">Leroy Merlin · 6% comissão</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-row rev rv">
+      <div class="feat-txt">
+        <span class="feat-num mono">MVP 02 · Semanas 3-4</span>
+        <h3>Agente de IA que busca produto por demanda</h3>
+        <p>O profissional descreve o que precisa em linguagem natural ("piso pra uma sala de 30m²") e o agente cruza catálogo, calcula quantidade, compara preço entre redes e devolve a melhor compra com o cashback já embutido.</p>
+        <div class="feat-list">
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Entende a necessidade, não só a palavra-chave</div>
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Calcula quantidade e monta a lista da obra inteira</div>
+          <div class="li"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Compara preço entre lojas e prioriza maior comissão + cashback</div>
+        </div>
+      </div>
+      <div class="feat-visual" style="display:flex;flex-direction:column;justify-content:center;gap:14px">
+        <div class="cmsg user" style="max-width:78%">Preciso de piso pra uma sala de 30m²</div>
+        <div class="cmsg bot" style="max-width:90%">Separei <b>3 opções</b> que cobrem 30m² com 10% de quebra. A 2ª tem o melhor custo-benefício com cashback.</div>
+        <div style="display:flex;gap:10px"><div class="mini" style="flex:1"><div class="mt">Porcelanato Bege 60×60</div><div class="mp mono">R$ 1.812</div><div class="mc">R$ 90 cashback</div></div><div class="mini" style="flex:1;border-color:var(--amber)"><div class="mt">Porcelanato Cinza 80×80</div><div class="mp mono">R$ 2.046</div><div class="mc">R$ 122 cashback</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENT DEMO -->
+<section class="sec agent" id="agente">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Demonstração ao vivo</div>
+      <h2>Converse com o agente da Prumo</h2>
+      <p>Clique numa das necessidades abaixo ou escreva a sua. O agente responde como responderia ao profissional dentro do WhatsApp.</p>
+    </div>
+    <div class="agent-grid">
+      <div class="agent-copy rv">
+        <h3>Da intenção à compra, sem sair da conversa</h3>
+        <p>O agente é o coração da Prumo. Ele transforma uma frase solta numa lista de compra otimizada, com preço, quantidade e cashback calculados em segundos, e fecha pelo link de afiliado que gera a receita da plataforma.</p>
+        <div class="agent-steps">
+          <div class="astep"><span class="k mono">01</span><div class="x"><h4>Entende a demanda</h4><p>Interpreta o pedido em linguagem natural, mesmo informal ou com gíria de obra.</p></div></div>
+          <div class="astep"><span class="k mono">02</span><div class="x"><h4>Calcula e compara</h4><p>Dimensiona a quantidade, cruza catálogo das redes e ordena pela melhor compra.</p></div></div>
+          <div class="astep"><span class="k mono">03</span><div class="x"><h4>Fecha com cashback</h4><p>Devolve o link de afiliado e registra o cashback que volta pro profissional.</p></div></div>
+        </div>
+      </div>
+
+      <div class="chat rv">
+        <div class="chat-head">
+          <div class="ava"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4.5v9L12 22l-8-6.5v-9L12 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="10.5" r="2" fill="#fff"/></svg></div>
+          <div><div class="nm">Agente Prumo</div><div class="st"><span class="on"></span>respondendo na hora</div></div>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="cmsg bot">Fala, chefe! 👷 Sou o agente da Prumo. Me diz o que você precisa pra obra que eu acho o melhor preço com cashback. Pode escrever do seu jeito.</div>
+        </div>
+        <div class="chat-foot">
+          <div class="chat-chips" id="chips">
+            <span class="chip" data-q="piso">Piso pra sala de 30m²</span>
+            <span class="chip" data-q="banheiro">Reformar um banheiro</span>
+            <span class="chip" data-q="furadeira">Furadeira boa e barata</span>
+            <span class="chip" data-q="tinta">Tinta pra casa toda</span>
+          </div>
+          <div class="chat-inrow">
+            <input class="chat-input" id="chatInput" placeholder="Escreva o que precisa..." autocomplete="off">
+            <button class="chat-sendb" id="chatSend"><svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULATOR -->
+<section class="sec" id="simulador">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Simulador de unit economics</div>
+      <h2>Por que todo mundo ganha ao mesmo tempo</h2>
+      <p>Mexa nos controles e veja como o ganho do profissional e a receita da Prumo crescem juntos. Os números seguem o modelo base do projeto, com a comissão líquida já descontada das taxas de rede.</p>
+    </div>
+    <div class="sim-grid">
+      <div class="sim-controls rv">
+        <div class="sim-ctl">
+          <div class="lab"><span class="t">Compra de material por mês</span><span class="v mono" id="vGmv">R$ 37.500</span></div>
+          <input type="range" id="sGmv" min="10000" max="60000" step="2500" value="37500">
+          <div class="sim-hint">Profissional médio: R$ 450 mil em material por ano.</div>
+        </div>
+        <div class="sim-ctl">
+          <div class="lab"><span class="t">Adoção da compra via Prumo</span><span class="v mono" id="vAdo">20%</span></div>
+          <input type="range" id="sAdo" min="5" max="50" step="5" value="20">
+          <div class="sim-hint">Quanto da compra dele passa a ser feita pela plataforma.</div>
+        </div>
+        <div class="sim-ctl">
+          <div class="lab"><span class="t">Assinatura mensal</span><span class="v mono" id="vAss">R$ 79</span></div>
+          <input type="range" id="sAss" min="0" max="149" step="10" value="79">
+          <div class="sim-hint">No MVP 01 a assinatura é R$ 0, só afiliação. Ela entra na fase plataforma.</div>
+        </div>
+      </div>
+
+      <div class="sim-out">
+        <div class="sim-prof rv">
+          <div class="h">Ganho líquido do profissional</div>
+          <div class="big mono" id="oProf">+ R$ 101<span style="font-size:18px">/mês</span></div>
+          <div class="sub" id="oProfSub">Recebe R$ 180 de cashback e paga R$ 79 de assinatura.</div>
+        </div>
+        <div class="sim-rows rv">
+          <div class="sim-row"><span class="k"><span class="dotk" style="background:#16140f"></span>GMV na plataforma</span><span class="val mono" id="oGmv">R$ 7.500</span></div>
+          <div class="sim-row"><span class="k"><span class="dotk" style="background:#c98a3f"></span>Comissão líquida (6%)</span><span class="val mono" id="oCom">R$ 270</span></div>
+          <div class="sim-row"><span class="k"><span class="dotk" style="background:#1f9d6b"></span>Cashback ao profissional</span><span class="val mono" style="color:#1f9d6b" id="oCb">- R$ 180</span></div>
+          <div class="sim-row"><span class="k"><span class="dotk" style="background:#e8821e"></span>Assinatura</span><span class="val mono" id="oAss">+ R$ 79</span></div>
+          <div class="sim-row tot"><span class="k">Receita da Prumo / usuário</span><span class="val mono" id="oRev">R$ 349</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section class="sec market" id="mercado">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Tamanho da oportunidade</div>
+      <h2>Um mercado gigante, sem ninguém olhando pra esse cliente</h2>
+      <p>O varejo de material de construção move cerca de R$ 250 bilhões por ano no Brasil. A Prumo não precisa de uma fatia grande dele, precisa apenas dos profissionais que já compram em volume.</p>
+    </div>
+    <div class="tam">
+      <div class="tam-card rv"><div class="ring"></div><div class="lvl">TAM</div><div class="num mono">R$ 250 bi</div><div class="dsc">Varejo de material de construção no Brasil por ano.</div></div>
+      <div class="tam-card sam rv"><div class="ring"></div><div class="lvl">SAM</div><div class="num mono">R$ 90 bi</div><div class="dsc">Compra anual dos 5-7 mi de profissionais autônomos de obra.</div></div>
+      <div class="tam-card som rv"><div class="ring"></div><div class="lvl">SOM · 3 anos</div><div class="num mono">R$ 0,9 bi</div><div class="dsc">GMV transacionado com 20 mil profissionais ativos na plataforma.</div></div>
+    </div>
+    <div class="market-foot mono rv">Fontes: ABRAMAT / ANAMACO · Perplexity Deep Research, jun/2026.</div>
+
+    <div class="gap rv">
+      <h3>Ninguém junta as quatro peças que importam</h3>
+      <table class="gap-tbl">
+        <thead><tr><th>Player</th><th>Cashback real</th><th>Busca por demanda</th><th>Foco no profissional</th><th>Dentro do WhatsApp</th></tr></thead>
+        <tbody>
+          <tr><td>Méliuz / cashback geral</td><td class="yes">Sim</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Apps das redes (Leroy, etc.)</td><td class="no">Fraco</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Marketplaces (ML, Amazon)</td><td class="no">Não</td><td class="no">Busca crua</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Clubes de fidelidade de loja</td><td class="no">Pontos</td><td class="no">Não</td><td class="no">Parcial</td><td class="no">Não</td></tr>
+          <tr class="us"><td>Prumo</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- UNIT ECONOMICS -->
+<section class="sec" id="economics">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Números que se sustentam</div>
+      <h2>Unit economics honestos, não otimistas</h2>
+      <p>O modelo abaixo usa premissas conservadoras: comissão líquida já descontada da taxa de rede e churn tratado com realismo. A conta fecha mesmo quando a gente não acerta tudo.</p>
+    </div>
+    <div class="econ-grid">
+      <div class="econ-card rv"><div class="l">ARPU</div><div class="n mono">R$ 349</div><div class="d">receita média por usuário/mês na fase plataforma</div></div>
+      <div class="econ-card rv"><div class="l">Margem de contribuição</div><div class="n mono">91%</div><div class="d">R$ 319 líquidos sobre R$ 349 de receita</div></div>
+      <div class="econ-card rv"><div class="l">CAC estimado</div><div class="n mono">R$ 300</div><div class="d">proposta de valor clara encurta o ciclo</div></div>
+      <div class="econ-card hl rv"><div class="l">LTV / CAC</div><div class="n mono">~5×</div><div class="d">com churn realista de 8%/mês, payback &lt; 2 meses</div></div>
+    </div>
+    <div class="honest rv">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h16.9a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p><b>Onde somos conservadores:</b> a comissão bruta de afiliados (6-10%) cai à metade depois da taxa de rede, e por isso o modelo já trabalha com 6% líquido. O churn de 5%/mês do plano original foi ajustado para 8%: o cashback reduz churn de forma estrutural, mas só depois que o hábito de compra se firma. Mesmo nesse cenário mais duro, o LTV/CAC continua saudável.</p>
+    </div>
+
+    <div class="scale rv">
+      <table>
+        <thead><tr><th>Base de profissionais</th><th>MRR</th><th>ARR</th><th>Cashback pago/mês</th><th>Contribuição/mês</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td>R$ 34,9 mil</td><td>R$ 419 mil</td><td>R$ 18 mil</td><td>R$ 31,9 mil</td></tr>
+          <tr><td>500</td><td>R$ 174 mil</td><td>R$ 2,1 mi</td><td>R$ 90 mil</td><td>R$ 159 mil</td></tr>
+          <tr class="feat-r"><td>1.000</td><td>R$ 349 mil</td><td>R$ 4,2 mi</td><td>R$ 180 mil</td><td>R$ 319 mil</td></tr>
+          <tr><td>2.000</td><td>R$ 698 mil</td><td>R$ 8,4 mi</td><td>R$ 360 mil</td><td>R$ 638 mil</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="sec road" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Cronograma de execução</div>
+      <h2>Do canal no WhatsApp à plataforma completa</h2>
+      <p>Quatro fases, cada uma entregando valor por conta própria. A receita começa na fase 1, antes de qualquer investimento pesado em produto.</p>
+    </div>
+    <div class="road-track">
+      <div class="rphase p1 rv">
+        <div class="bar"></div>
+        <div class="wk mono">Semanas 1-2</div>
+        <h4>Canal de ofertas</h4>
+        <span class="tag">MVP 01 · receita já</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Cadastro Awin (CNPJ) + Mercado Livre Afiliados</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Feed curado de ofertas + conteúdo de obra</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Primeiros profissionais no canal</li>
+        </ul>
+      </div>
+      <div class="rphase p2 rv">
+        <div class="bar"></div>
+        <div class="wk mono">Semanas 3-4</div>
+        <h4>Agente de IA</h4>
+        <span class="tag">MVP 02 · busca por demanda</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Agente busca produto por linguagem natural</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Cálculo de quantidade e comparação de preço</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Fechamento via deeplink de afiliado</li>
+        </ul>
+      </div>
+      <div class="rphase p3 rv">
+        <div class="bar"></div>
+        <div class="wk mono">Mês 2-3</div>
+        <h4>Cashback + conta</h4>
+        <span class="tag">Plataforma · fidelização</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Carteira de cashback real e rastreável</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Assinatura R$ 79 com ROI positivo</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Histórico de compra por obra</li>
+        </ul>
+      </div>
+      <div class="rphase p4 rv">
+        <div class="bar"></div>
+        <div class="wk mono">Mês 4+</div>
+        <h4>Gestão de obra</h4>
+        <span class="tag">Robustez · retenção</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Orçamento e lista por obra</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Mais redes integradas via Awin/Lomadee</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>Ferramentas de gestão que travam o churn</li>
+        </ul>
+      </div>
+    </div>
+    <p class="road-note rv"><b>A lógica é sempre a mesma:</b> validar receita com o mínimo, e só adicionar complexidade quando o uso pedir. O cashback e a gestão de obra entram como vetores de retenção depois que o hábito de compra já está formado.</p>
+  </div>
+</section>
+
+<!-- ASK -->
+<section class="sec" id="ask">
+  <div class="wrap">
+    <div class="ask rv">
+      <div class="ask-in">
+        <h2>A Prumo está pronta pra sair do papel.</h2>
+        <p>O modelo está validado, o produto está desenhado e a primeira receita pode entrar nas próximas semanas. O que estamos construindo é a camada de compra inteligente que faltava para 7 milhões de profissionais.</p>
+        <div class="ask-points">
+          <div class="it"><div class="n mono">4 semanas</div><div class="l">até o produto completo no ar</div></div>
+          <div class="it"><div class="n mono">~5×</div><div class="l">LTV / CAC com premissa conservadora</div></div>
+          <div class="it"><div class="n mono">R$ 90 bi</div><div class="l">de compra anual no alvo direto</div></div>
+        </div>
+        <div class="ask-cta">
+          <a href="#produto" class="btn btn-primary">Rever o produto</a>
+          <a href="#simulador" class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.25)">Abrir o simulador</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <div class="foot-brand"><svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 6l8 4.5v9L16 24l-8-4.5v-9L16 6z" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg>Prumo</div>
+      <div class="foot-meta" style="margin-top:10px">Compra inteligente para o profissional de obra.</div>
+    </div>
+    <div class="foot-meta" style="text-align:right">
+      <b>Protótipo de apresentação</b> · jun/2026<br>
+      Construído por mondo · dados ilustrativos para demonstração
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- Reveal on scroll ---------- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ---------- Phone: reveal argamassa offer after typing ---------- */
+setTimeout(()=>{
+  const typing=document.getElementById('waTyping');const body=document.getElementById('waBody');
+  if(!typing)return;typing.remove();
+  body.insertAdjacentHTML('beforeend',`
+    <div class="msg in" style="margin-top:2px">Achei essa, mesma loja, entrega junto com o porcelanato 👇<div class="t">08:16</div></div>
+    <div class="offer">
+      <div class="offer-img"><span class="offer-tag">Top venda</span><span class="offer-store">Leroy Merlin</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16v13H4zM4 7l2-3h12l2 3M9 11h6" stroke="#16140f" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+      <div class="offer-b"><div class="offer-t">Argamassa AC-III 20kg Quartzolit</div>
+      <div class="offer-price"><span class="p">R$ 32,90</span></div>
+      <div class="offer-cb"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="#1f9d6b" stroke-width="2" stroke-linecap="round"/></svg>R$ 1,65 de cashback</div>
+      <div class="offer-btn">Comprar e ativar cashback</div></div>
+    </div>`);
+  body.scrollTop=body.scrollHeight;
+},2600);
+
+/* ---------- Cashback simulator ---------- */
+const sGmv=document.getElementById('sGmv'),sAdo=document.getElementById('sAdo'),sAss=document.getElementById('sAss');
+const fmt=n=>'R$ '+Math.round(n).toLocaleString('pt-BR');
+function sim(){
+  const gmvTot=+sGmv.value, ado=+sAdo.value/100, ass=+sAss.value;
+  const gmvPlat=gmvTot*ado;
+  const com=gmvPlat*0.06;              // comissão líquida 6%
+  const cb=com*0.40;                   // 40% vira cashback
+  const comLiq=com-cb;
+  const rev=comLiq+ass;
+  const ganho=cb-ass;
+  document.getElementById('vGmv').textContent=fmt(gmvTot);
+  document.getElementById('vAdo').textContent=(ado*100)+'%';
+  document.getElementById('vAss').textContent=fmt(ass);
+  document.getElementById('oGmv').textContent=fmt(gmvPlat);
+  document.getElementById('oCom').textContent=fmt(com);
+  document.getElementById('oCb').textContent='- '+fmt(cb);
+  document.getElementById('oAss').textContent='+ '+fmt(ass);
+  document.getElementById('oRev').textContent=fmt(rev);
+  const prof=document.getElementById('oProf');
+  prof.innerHTML=(ganho>=0?'+ ':'- ')+fmt(Math.abs(ganho))+'<span style="font-size:18px">/mês</span>';
+  const card=prof.closest('.sim-prof');
+  if(ganho>=0){card.style.background='var(--money-tint)';card.style.borderColor='#bfe6d2';prof.style.color='#137a52';card.querySelector('.h').style.color='#137a52';}
+  else{card.style.background='#fdeceb';card.style.borderColor='#f3c9c5';prof.style.color='#c0392b';card.querySelector('.h').style.color='#c0392b';}
+  document.getElementById('oProfSub').textContent='Recebe '+fmt(cb)+' de cashback'+(ass>0?' e paga '+fmt(ass)+' de assinatura.':' sem custo de assinatura.');
+}
+[sGmv,sAdo,sAss].forEach(s=>s.addEventListener('input',sim));sim();
+
+/* ---------- Agent chat ---------- */
+const chatBody=document.getElementById('chatBody'),chatInput=document.getElementById('chatInput'),chatSend=document.getElementById('chatSend');
+const ICON_TILE='<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="13" y="3" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="3" y="13" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/><rect x="13" y="13" width="8" height="8" rx="1" stroke="#16140f" stroke-width="1.4"/></svg>';
+const ICON_TOOL='<svg viewBox="0 0 24 24" fill="none"><path d="M14 6a4 4 0 01-5 5l-6 6 2 2 6-6a4 4 0 005-5l-2 2-2-2 2-2z" stroke="#16140f" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const ICON_PAINT='<svg viewBox="0 0 24 24" fill="none"><path d="M19 3H5v8h14V3zM9 11v4a3 3 0 006 0M12 19v2" stroke="#16140f" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const ICON_BATH='<svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16v3a4 4 0 01-4 4H8a4 4 0 01-4-4v-3zM6 12V6a2 2 0 014 0" stroke="#16140f" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+
+const FLOWS={
+  piso:{user:'Preciso de piso pra uma sala de 30m²',intro:'Boa! Pra 30m² com 10% de quebra, você precisa de ~33m². Separei <b>3 opções</b>, a do meio é o melhor custo-benefício com cashback:',
+    title:'Piso · 33m² (com quebra)',ic:ICON_TILE,
+    items:[['Porcelanato Acetinado Bege 60×60','R$ 1.812','R$ 90','Leroy Merlin'],['Porcelanato Cinza Cement 80×80','R$ 2.046','R$ 122','Mercado Livre'],['Porcelanato Polido Branco 60×60','R$ 2.310','R$ 138','Telhanorte']],
+    total:['R$ 2.046','R$ 122']},
+  banheiro:{user:'Quero reformar um banheiro',intro:'Montei um <b>kit completo de banheiro</b> juntando louça, metais e revestimento na loja com melhor preço somado:',
+    title:'Kit banheiro completo',ic:ICON_BATH,
+    items:[['Vaso c/ caixa acoplada Deca','R$ 459','R$ 23','Leroy Merlin'],['Torneira Gourmet Lorenzetti','R$ 219','R$ 11','Mercado Livre'],['Revestimento Branco 30×60 (8m²)','R$ 312','R$ 16','Leroy Merlin']],
+    total:['R$ 990','R$ 50']},
+  furadeira:{user:'Quero uma furadeira boa e barata',intro:'Pra uso profissional sem pesar no bolso, a <b>Bosch GSB 13RE</b> é a melhor escolha, e ainda tem o maior cashback do grupo:',
+    title:'Furadeiras · uso profissional',ic:ICON_TOOL,
+    items:[['Furadeira Impacto Bosch GSB 13RE 650W','R$ 349','R$ 17','Mercado Livre'],['Furadeira Vonder PEV 600','R$ 229','R$ 9','Leroy Merlin'],['Parafusadeira Makita HP333D 12V','R$ 489','R$ 24','Amazon']],
+    total:['R$ 349','R$ 17']},
+  tinta:{user:'Preciso de tinta pra casa toda',intro:'Pra uma casa média (~120m² de parede, 2 demãos), você precisa de ~3 latas de 18L. Melhor combinação:',
+    title:'Tinta · casa ~120m²',ic:ICON_PAINT,
+    items:[['Acrílica Premium Suvinil 18L (×3)','R$ 867','R$ 43','Telhanorte'],['Acrílica Coral Rende Muito 18L (×3)','R$ 798','R$ 32','Leroy Merlin'],['Massa Corrida 25kg + lixa (kit)','R$ 142','R$ 7','Leroy Merlin']],
+    total:['R$ 940','R$ 39']}
+};
+function detect(t){t=t.toLowerCase();
+  if(/piso|porcelanato|ceramic|sala|cha[oã]/.test(t))return'piso';
+  if(/banheir|vaso|sanit|louça|torneira|chuveiro/.test(t))return'banheiro';
+  if(/furad|parafusad|ferrament|broca|makita|bosch/.test(t))return'furadeira';
+  if(/tinta|pintar|pintura|acrilic|parede/.test(t))return'tinta';
+  return null;}
+function addUser(txt){chatBody.insertAdjacentHTML('beforeend',`<div class="cmsg user">${txt}</div>`);chatBody.scrollTop=chatBody.scrollHeight;}
+function addTyping(){chatBody.insertAdjacentHTML('beforeend',`<div class="typing" id="ct" style="background:#fff;border:1px solid var(--line)"><span></span><span></span><span></span></div>`);chatBody.scrollTop=chatBody.scrollHeight;}
+function rmTyping(){const t=document.getElementById('ct');if(t)t.remove();}
+function renderFlow(f){
+  let rows=f.items.map((it,i)=>`<div class="crec-item"><div class="crec-thumb">${f.ic}</div><div class="crec-info"><div class="n">${it[0]}</div><div class="meta"><span class="pr mono">${it[1]}</span><span class="cb">+${it[2]} cashback</span><span class="sg">${it[3]}</span></div></div></div>`).join('');
+  chatBody.insertAdjacentHTML('beforeend',`<div class="cmsg bot">${f.intro}</div>
+    <div class="crec"><div class="ct">${f.title}</div>${rows}
+    <div class="crec-total"><span>Melhor compra fecha em</span><span><b class="mono">${f.total[0]}</b> · <span class="cbk">+${f.total[1]} cashback</span></span></div></div>
+    <div class="cmsg bot">Quer que eu já gere o link pra fechar essa compra? 🔗 É por aqui que o cashback ativa.</div>`);
+  chatBody.scrollTop=chatBody.scrollHeight;
+}
+function respond(key){
+  addTyping();
+  setTimeout(()=>{rmTyping();
+    if(key){renderFlow(FLOWS[key]);}
+    else{chatBody.insertAdjacentHTML('beforeend',`<div class="cmsg bot">Consigo achar pra qualquer etapa da obra: piso, tinta, louça, ferramenta, elétrica. Tenta assim: <b>"piso pra sala de 30m²"</b> ou toca num dos atalhos aqui embaixo. 👇</div>`);chatBody.scrollTop=chatBody.scrollHeight;}
+  },900);
+}
+function send(text,key){addUser(text);respond(key||detect(text));}
+document.getElementById('chips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;send(c.textContent,c.dataset.q);});
+function manual(){const v=chatInput.value.trim();if(!v)return;chatInput.value='';send(v,detect(v));}
+chatSend.addEventListener('click',manual);
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')manual();});
+</script>
+</body>
+</html>
