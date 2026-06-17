@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prumo - Compra Inteligente para Obra</title>
+<meta name="description" content="O agente de IA que transforma uma frase em lista de compra otimizada, com preço, quantidade e cashback. Para o profissional da construção.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316140f'/%3E%3Cpath d='M11.5 6.2h9' stroke='%23e8821e' stroke-width='1.7' stroke-linecap='round'/%3E%3Cpath d='M16 6.2v6.3' stroke='%23e8821e' stroke-width='1.7' stroke-linecap='round'/%3E%3Cpath d='M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z' fill='%23e8821e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f7f5; --surface:#ffffff; --surface-2:#fbfaf8; --ink:#16140f; --ink-soft:#55514a;
+  --line:#e7e5e0; --line-soft:#f0eee9;
+  --amber:#e8821e; --amber-deep:#c96a0f; --amber-tint:#fdf2e3;
+  --graphite:#1c1a16; --money:#1f9d6b; --money-deep:#147a52; --money-tint:#e7f5ee;
+  --radius:16px; --radius-sm:11px; --radius-xs:8px;
+  --shadow:0 1px 2px rgba(28,26,22,.04),0 8px 30px rgba(28,26,22,.06);
+  --shadow-lg:0 2px 6px rgba(28,26,22,.06),0 24px 60px rgba(28,26,22,.12);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+.mono{font-family:var(--font);font-variant-numeric:tabular-nums}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+a{color:inherit;text-decoration:none}
+
+/* ---------- Header ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(247,247,245,.85);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18.5px;letter-spacing:-.02em}
+.brand .mk{width:30px;height:30px;flex-shrink:0}
+.brand small{font-weight:500;color:var(--ink-soft);font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin-left:1px}
+.tabs{display:flex;gap:3px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tab{padding:8px 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink-soft);display:flex;align-items:center;gap:7px;transition:.16s}
+.tab svg{width:16px;height:16px}
+.tab.active{background:var(--graphite);color:#fff}
+.tab:not(.active):hover{background:var(--surface-2);color:var(--ink)}
+.demo-badge{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-deep);background:var(--amber-tint);border:1px solid #f4dcba;padding:5px 10px;border-radius:20px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.view{display:none;animation:fade .35s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- Agente view ---------- */
+.agente-grid{display:grid;grid-template-columns:1fr 372px;gap:26px;padding:30px 0 60px;align-items:start}
+@media(max-width:940px){.agente-grid{grid-template-columns:1fr}}
+
+.hero-head{margin-bottom:18px}
+.hero-head h1{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.hero-head h1 .hl{color:var(--amber)}
+.hero-head p{color:var(--ink-soft);font-size:15px;margin-top:8px;max-width:560px}
+
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-height:560px}
+.chat-head{padding:14px 18px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:11px;background:var(--surface-2)}
+.chat-ava{width:36px;height:36px;border-radius:10px;flex-shrink:0}
+.chat-head .ci{font-weight:700;font-size:14.5px}
+.chat-head .cs{font-size:11.5px;color:var(--money);font-weight:600;display:flex;align-items:center;gap:5px;margin-top:1px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--money);box-shadow:0 0 0 0 rgba(31,157,107,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,107,.45)}70%{box-shadow:0 0 0 6px rgba(31,157,107,0)}100%{box-shadow:0 0 0 0 rgba(31,157,107,0)}}
+
+.msgs{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px;max-height:540px}
+.m{max-width:90%;font-size:14.5px;line-height:1.55}
+.m.user{align-self:flex-end;background:var(--graphite);color:#fff;padding:11px 15px;border-radius:14px 14px 4px 14px}
+.m.bot{align-self:flex-start;color:var(--ink)}
+.m.bot .bubble{background:var(--surface-2);border:1px solid var(--line-soft);padding:12px 15px;border-radius:14px 14px 14px 4px}
+.m.bot .bubble strong{color:var(--ink);font-weight:700}
+
+.lista{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.prod{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 12px;transition:.16s}
+.prod:hover{border-color:#dcd8d0;box-shadow:var(--shadow)}
+.prod-ic{width:46px;height:46px;border-radius:10px;background:var(--amber-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--amber-deep)}
+.prod-ic svg{width:24px;height:24px}
+.prod-main{flex:1;min-width:0}
+.prod-nome{font-size:13.5px;font-weight:600;line-height:1.3}
+.prod-marca{font-size:11.5px;color:var(--ink-soft);margin-top:1px}
+.prod-just{font-size:11px;color:var(--amber-deep);margin-top:3px;font-weight:500}
+.prod-right{text-align:right;flex-shrink:0}
+.prod-qtd{font-size:11px;color:var(--ink-soft);font-weight:600}
+.prod-preco{font-size:14px;font-weight:700;font-family:var(--font);font-variant-numeric:tabular-nums}
+.prod-cb{font-size:10.5px;color:var(--money);font-weight:600;display:flex;align-items:center;gap:3px;justify-content:flex-end;margin-top:2px}
+.prod-cb svg{width:11px;height:11px}
+.prod-buy{margin-left:2px;flex-shrink:0;width:34px;height:34px;border-radius:9px;background:var(--graphite);display:flex;align-items:center;justify-content:center;transition:.16s}
+.prod-buy:hover{background:var(--amber)}
+.prod-buy svg{width:15px;height:15px;color:#fff}
+
+.lista-foot{margin-top:13px;background:var(--money-tint);border:1px solid #c9e9d8;border-radius:var(--radius-sm);padding:13px 15px}
+.lf-row{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.lf-row+.lf-row{margin-top:7px;padding-top:7px;border-top:1px dashed #bfe2d0}
+.lf-row .k{color:var(--money-deep);font-weight:600}
+.lf-row .v{font-family:var(--font);font-variant-numeric:tabular-nums;font-weight:700}
+.lf-row.total .v{font-size:17px}
+.lf-row.cb .k,.lf-row.cb .v{color:var(--money-deep)}
+.lf-cta{margin-top:11px;width:100%;background:var(--money);color:#fff;padding:11px;border-radius:10px;font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s}
+.lf-cta:hover{background:var(--money-deep)}
+.lf-cta svg{width:16px;height:16px}
+.lista-actions{margin-top:9px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.la-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;font-weight:600;font-size:12.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);transition:.16s;cursor:pointer}
+.la-btn:hover{border-color:var(--amber);color:var(--amber-deep);background:var(--amber-tint)}
+.la-btn svg{width:15px;height:15px}
+.la-btn.wa:hover{border-color:var(--money);color:var(--money-deep);background:var(--money-tint)}
+@media(max-width:380px){.lista-actions{grid-template-columns:1fr}}
+
+.typing{align-self:flex-start;display:flex;gap:4px;padding:13px 16px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:14px}
+.typing span{width:7px;height:7px;border-radius:50%;background:#c7c2b8;animation:bounce 1.3s infinite}
+.typing span:nth-child(2){animation-delay:.18s}.typing span:nth-child(3){animation-delay:.36s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+
+.chips{padding:13px 18px;border-top:1px solid var(--line-soft);display:flex;gap:8px;flex-wrap:wrap;background:var(--surface-2)}
+.chip{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);padding:8px 13px;border-radius:20px;transition:.16s}
+.chip:hover{border-color:var(--amber);color:var(--amber-deep);background:var(--amber-tint)}
+.composer{padding:14px 18px;border-top:1px solid var(--line-soft);display:flex;gap:10px;align-items:flex-end;background:var(--surface)}
+.composer textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:14px;line-height:1.4;max-height:120px;background:var(--surface-2);transition:.16s}
+.composer textarea:focus{outline:none;border-color:var(--amber);background:var(--surface)}
+.send{width:44px;height:44px;border-radius:12px;background:var(--amber);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.16s}
+.send:hover{background:var(--amber-deep)}.send:disabled{opacity:.4;cursor:not-allowed}
+.send svg{width:19px;height:19px;color:#fff}
+
+/* aside */
+.aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:78px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card h3{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.card h3 svg{width:17px;height:17px;color:var(--amber)}
+.card .sub{font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.5}
+.steps{margin-top:14px;display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:11px;align-items:flex-start}
+.step-n{width:24px;height:24px;border-radius:7px;background:var(--graphite);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-t{font-size:12.5px;font-weight:600}
+.step-d{font-size:11.5px;color:var(--ink-soft);margin-top:1px}
+.kpi-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.km{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:10px;padding:11px 12px}
+.km-v{font-size:19px;font-weight:800;font-family:var(--font);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.km-v.money{color:var(--money)}
+.km-k{font-size:10.5px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+
+/* ---------- Painel view ---------- */
+.painel{padding:34px 0 60px}
+.painel-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;margin-bottom:22px}
+.painel-head h2{font-size:25px;font-weight:800;letter-spacing:-.03em}
+.painel-head p{color:var(--ink-soft);font-size:14px;margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+@media(max-width:840px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.stat-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-ic svg{width:20px;height:20px}
+.stat-ic.amber{background:var(--amber-tint);color:var(--amber-deep)}
+.stat-ic.money{background:var(--money-tint);color:var(--money-deep)}
+.stat-ic.ink{background:#edeae4;color:var(--graphite)}
+.stat-v{font-size:26px;font-weight:800;font-family:var(--font);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.stat-k{font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-top:3px}
+.painel-sec h3{font-size:15px;font-weight:700;margin-bottom:13px}
+.hist-empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);padding:46px 20px;text-align:center}
+.hist-empty svg{width:38px;height:38px;color:#cfcabf;margin-bottom:12px}
+.hist-empty p{color:var(--ink-soft);font-size:14px}
+.hist-empty button{margin-top:16px;background:var(--amber);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:13.5px}
+.hist-list{display:flex;flex-direction:column;gap:12px}
+.hist-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.hist-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hist-q{font-size:14px;font-weight:600;flex:1}
+.hist-date{font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
+.hist-meta{display:flex;gap:18px;margin-top:11px;flex-wrap:wrap}
+.hist-meta div{font-size:12px;color:var(--ink-soft)}
+.hist-meta b{font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.hist-meta .cbv{color:var(--money)}
+
+/* ---------- Ofertas view ---------- */
+.ofertas{padding:34px 0 60px;max-width:680px;margin:0 auto}
+.of-head{text-align:center;margin-bottom:24px}
+.of-head h2{font-size:25px;font-weight:800;letter-spacing:-.03em}
+.of-head p{color:var(--ink-soft);font-size:14px;margin-top:6px}
+.feed{background:#e9e4dc;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow-lg)}
+.feed-day{text-align:center;margin:6px 0 14px}
+.feed-day span{font-size:11px;font-weight:600;color:var(--ink-soft);background:#dcd6cc;padding:4px 12px;border-radius:12px}
+.wa-msg{background:#fff;border-radius:4px 14px 14px 14px;padding:13px 15px;max-width:90%;box-shadow:0 1px 1px rgba(0,0,0,.06);margin-bottom:11px}
+.wa-msg .wt{font-size:13px;line-height:1.5}
+.wa-msg .wt b{font-weight:700}
+.wa-prod{display:flex;gap:12px;align-items:center;margin-top:11px;padding-top:11px;border-top:1px solid var(--line-soft)}
+.wa-prod .pi{width:44px;height:44px;border-radius:9px;background:var(--amber-tint);display:flex;align-items:center;justify-content:center;color:var(--amber-deep);flex-shrink:0}
+.wa-prod .pi svg{width:23px;height:23px}
+.wa-prod .pm{flex:1;min-width:0}
+.wa-prod .pn{font-size:12.5px;font-weight:600}
+.wa-prod .pp{font-size:13px;font-weight:700;font-family:var(--font);font-variant-numeric:tabular-nums}
+.wa-prod .pc{font-size:10.5px;color:var(--money);font-weight:600;display:flex;align-items:center;gap:3px;margin-top:1px}
+.wa-prod .pc svg{width:11px;height:11px}
+.wa-prod .pg{width:32px;height:32px;border-radius:8px;background:var(--graphite);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wa-prod .pg svg{width:14px;height:14px;color:#fff}
+.wa-time{font-size:10px;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+footer{border-top:1px solid var(--line);padding:26px 22px;text-align:center}
+.foot-in{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.foot-brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px}
+.foot-brand .mk{width:24px;height:24px}
+.foot-note{font-size:12px;color:var(--ink-soft)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--graphite);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.3s;z-index:100;display:flex;align-items:center;gap:9px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:17px;height:17px;color:var(--money)}
+
+/* ---------- Mobile bottom nav ---------- */
+.mtabs{display:none}
+@media(max-width:720px){
+  .tabs{display:none}
+  .demo-badge{display:none}
+  .nav{padding:12px 16px}
+  .brand{font-size:17px}
+  .wrap{padding:0 16px}
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+
+  .agente-grid{padding:20px 0 30px;gap:18px}
+  .hero-head{margin-bottom:14px}
+  .hero-head h1{font-size:24px}
+  .hero-head p{font-size:14px}
+  .chat{min-height:auto;border-radius:var(--radius-sm)}
+  .msgs{max-height:54vh;padding:16px 14px;gap:12px}
+  .m{max-width:94%;font-size:14px}
+  .chips{padding:11px 14px;gap:7px}
+  .chip{font-size:12px;padding:7px 11px}
+  .composer{padding:12px 14px}
+  .prod{padding:10px 11px;gap:10px}
+  .prod-ic{width:42px;height:42px}
+
+  .painel{padding:22px 0 30px}
+  .painel-head h2,.of-head h2{font-size:22px}
+  .stat-grid{gap:11px;margin-bottom:20px}
+  .stat{padding:15px}
+  .stat-ic{width:34px;height:34px;margin-bottom:9px}
+  .stat-v{font-size:22px}
+  .stat-k{font-size:11.5px}
+  .ofertas{padding:22px 0 30px}
+  .feed{padding:13px;border-radius:16px}
+
+  .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);
+    border-top:1px solid var(--line);padding:7px 10px calc(7px + env(safe-area-inset-bottom))}
+  .mtab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:6px 4px;border-radius:11px;color:var(--ink-soft);transition:.16s}
+  .mtab svg{width:21px;height:21px}
+  .mtab span{font-size:10.5px;font-weight:600;letter-spacing:-.01em}
+  .mtab.active{color:var(--amber-deep)}
+  .mtab.active svg{color:var(--amber)}
+  footer{padding-bottom:30px}
+}
+@media(max-width:380px){
+  .hero-head h1{font-size:22px}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .mtab span{font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <svg class="mk" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M11.5 6.2h9" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.2v6.3" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/><path d="M16 12.8V25" stroke="#16140f" stroke-width="1" stroke-opacity=".38"/></svg>
+      Prumo<small>beta</small>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-view="agente"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 00-9 9 9 9 0 001.5 5L3 21l4-1.5A9 9 0 1012 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="12" r="1.1" fill="currentColor"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/><circle cx="15.5" cy="12" r="1.1" fill="currentColor"/></svg>Agente</button>
+      <button class="tab" data-view="painel"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="11" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="8" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>Minha obra</button>
+      <button class="tab" data-view="ofertas"><svg viewBox="0 0 24 24" fill="none"><path d="M20.6 13.4L13.4 20.6a2 2 0 01-2.8 0l-7.2-7.2a2 2 0 01-.6-1.4V5a2 2 0 012-2h6.8a2 2 0 011.4.6l7.6 7.6a2 2 0 010 2.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="7.5" r="1.4" fill="currentColor"/></svg>Ofertas</button>
+    </nav>
+    <span class="demo-badge">Demo investidor</span>
+  </div>
+</header>
+
+<!-- ===== AGENTE ===== -->
+<section id="agente" class="view active">
+<div class="wrap agente-grid">
+  <div>
+    <div class="hero-head">
+      <h1>Descreva a obra. O agente monta a <span class="hl">lista de compra</span>.</h1>
+      <p>Sem catálogo, sem planilha, sem perder tempo. Diga o que precisa em uma frase e receba os produtos certos, na quantidade certa, com preço e cashback calculados.</p>
+    </div>
+    <div class="chat">
+      <div class="chat-head">
+        <svg class="chat-ava" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="9" fill="#16140f"/><path d="M11.5 6.5h9" stroke="#e8821e" stroke-width="1.5" stroke-linecap="round"/><path d="M16 6.5v6" stroke="#e8821e" stroke-width="1.5" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/></svg>
+        <div>
+          <div class="ci">Agente Prumo</div>
+          <div class="cs"><span class="dot"></span>online · entende obra de verdade</div>
+        </div>
+      </div>
+      <div class="msgs" id="msgs">
+        <div class="m bot"><div class="bubble">Opa! Sou o agente da Prumo. Me diz o que você precisa pra obra <strong>em uma frase</strong>, tipo "piso pra sala de 30m²" ou "material elétrico de um quarto", que eu monto a lista com preço, quantidade e cashback. Pode mandar.</div></div>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip" data-q="Preciso de porcelanato para a sala de 30m²">Piso · sala 30m²</button>
+        <button class="chip" data-q="Quero pintar 2 quartos de 12m² cada, paredes e teto">Pintar 2 quartos</button>
+        <button class="chip" data-q="Material elétrico básico para 1 quarto novo">Elétrica de 1 quarto</button>
+        <button class="chip" data-q="Kit de ferramentas para começar uma reforma">Kit ferramentas</button>
+        <button class="chip" data-q="Trocar o banheiro inteiro: vaso, chuveiro, torneira e piso de 6m²">Banheiro completo</button>
+      </div>
+      <div class="composer">
+        <textarea id="input" rows="1" placeholder="Descreva o que precisa pra obra…"></textarea>
+        <button class="send" id="send"><svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="aside">
+    <div class="card">
+      <h3><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h7l-1 8 11-13h-8l1-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Como funciona</h3>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Você descreve a obra</div><div class="step-d">Em linguagem natural, do jeito que você fala no WhatsApp.</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">O agente calcula</div><div class="step-d">Identifica os produtos, calcula quantidade com margem de perda e soma o cashback.</div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Você compra e ganha de volta</div><div class="step-d">Compra pelo link e o cashback cai na sua conta Prumo.</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Acumulado na demo</h3>
+      <div class="kpi-mini">
+        <div class="km"><div class="km-v money" id="aside-cb">R$ 0</div><div class="km-k">cashback gerado</div></div>
+        <div class="km"><div class="km-v" id="aside-listas">0</div><div class="km-k">listas montadas</div></div>
+      </div>
+      <p class="sub">Cada lista que você salva vira histórico em "Minha obra", com cashback acumulado e economia.</p>
+    </div>
+  </aside>
+</div>
+</section>
+
+<!-- ===== PAINEL ===== -->
+<section id="painel" class="view">
+<div class="wrap painel">
+  <div class="painel-head">
+    <div>
+      <h2>Minha obra</h2>
+      <p>O painel do profissional: tudo que você comprou pela Prumo e quanto já ganhou de volta.</p>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-ic money"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><div class="stat-v money" id="st-cb">R$ 0</div><div class="stat-k">Cashback acumulado</div></div>
+    <div class="stat"><div class="stat-ic amber"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M6 6V4a2 2 0 012-2h8a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-v" id="st-gmv">R$ 0</div><div class="stat-k">Total em material</div></div>
+    <div class="stat"><div class="stat-ic ink"><svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-v" id="st-listas">0</div><div class="stat-k">Listas concluídas</div></div>
+    <div class="stat"><div class="stat-ic amber"><svg viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-v" id="st-itens">0</div><div class="stat-k">Itens comprados</div></div>
+  </div>
+  <div class="painel-sec">
+    <h3>Histórico de compras</h3>
+    <div id="hist"></div>
+  </div>
+</div>
+</section>
+
+<!-- ===== OFERTAS ===== -->
+<section id="ofertas" class="view">
+<div class="wrap ofertas">
+  <div class="of-head">
+    <h2>Ofertas do dia</h2>
+    <p>A curadoria diária da Prumo no WhatsApp. As melhores ofertas de material e ferramenta, com cashback embutido.</p>
+  </div>
+  <div class="feed">
+    <div class="feed-day"><span>Hoje</span></div>
+    <div id="feed-msgs"></div>
+  </div>
+</div>
+</section>
+
+<nav class="mtabs">
+  <button class="mtab active" data-view="agente"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 00-9 9 9 9 0 001.5 5L3 21l4-1.5A9 9 0 1012 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="12" r="1.1" fill="currentColor"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/><circle cx="15.5" cy="12" r="1.1" fill="currentColor"/></svg><span>Agente</span></button>
+  <button class="mtab" data-view="painel"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="11" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="8" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg><span>Minha obra</span></button>
+  <button class="mtab" data-view="ofertas"><svg viewBox="0 0 24 24" fill="none"><path d="M20.6 13.4L13.4 20.6a2 2 0 01-2.8 0l-7.2-7.2a2 2 0 01-.6-1.4V5a2 2 0 012-2h6.8a2 2 0 011.4.6l7.6 7.6a2 2 0 010 2.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="7.5" r="1.4" fill="currentColor"/></svg><span>Ofertas</span></button>
+</nav>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-brand">
+      <svg class="mk" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M11.5 6.2h9" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.2v6.3" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/></svg>
+      Prumo
+    </div>
+    <div class="foot-note">Compra inteligente para quem constrói · demo para apresentação a investidores · mondo</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="toast-t">Salvo</span></div>
+
+<script>
+/* ============ CATÁLOGO CURADO (materiais reais) ============ */
+const CATALOGO = [
+  {id:"porcelanato-bege",nome:"Porcelanato Acetinado Bege 60x60",marca:"Portinari",cat:"piso",un:"caixa",preco:89.90,rend:2.18,rendTxt:"2,18 m²/caixa",cb:0.05,ic:"floor"},
+  {id:"porcelanato-cinza",nome:"Porcelanato Cinza Polido 80x80",marca:"Eliane",cat:"piso",un:"caixa",preco:129.90,rend:1.92,rendTxt:"1,92 m²/caixa",cb:0.05,ic:"floor"},
+  {id:"ceramica-madeira",nome:"Cerâmica Amadeirada 20x120",marca:"Biancogres",cat:"piso",un:"caixa",preco:74.90,rend:2.02,rendTxt:"2,02 m²/caixa",cb:0.05,ic:"floor"},
+  {id:"azulejo-branco",nome:"Revestimento Branco Acetinado 30x60",marca:"Incepa",cat:"revestimento",un:"caixa",preco:49.90,rend:1.44,rendTxt:"1,44 m²/caixa",cb:0.05,ic:"wall"},
+  {id:"tinta-branca",nome:"Tinta Acrílica Premium Branco 18L",marca:"Suvinil",cat:"tinta",un:"lata",preco:379.90,rend:150,rendTxt:"~150 m² (2 demãos)",cb:0.04,ic:"paint"},
+  {id:"tinta-cor",nome:"Tinta Acrílica Fosca Colorida 18L",marca:"Coral",cat:"tinta",un:"lata",preco:349.90,rend:150,rendTxt:"~150 m² (2 demãos)",cb:0.04,ic:"paint"},
+  {id:"esmalte",nome:"Esmalte Sintético Acetinado 3,6L",marca:"Lukscolor",cat:"tinta",un:"galão",preco:119.90,rend:50,rendTxt:"~50 m²",cb:0.04,ic:"paint"},
+  {id:"massa-corrida",nome:"Massa Corrida PVA 25kg",marca:"Suvinil",cat:"tinta",un:"balde",preco:89.90,rend:30,rendTxt:"~30 m²",cb:0.04,ic:"paint"},
+  {id:"selador",nome:"Selador Acrílico 18L",marca:"Coral",cat:"tinta",un:"lata",preco:199.90,rend:200,rendTxt:"~200 m²",cb:0.04,ic:"paint"},
+  {id:"cimento",nome:"Cimento CP II 50kg",marca:"Votorantim",cat:"basico",un:"saco",preco:39.90,rend:0,rendTxt:"50kg",cb:0.03,ic:"bag"},
+  {id:"argamassa-ac2",nome:"Argamassa AC-II 20kg",marca:"Quartzolit",cat:"assentamento",un:"saco",preco:27.90,rend:5,rendTxt:"~5 m²/saco",cb:0.03,ic:"bag"},
+  {id:"argamassa-ac3",nome:"Argamassa AC-III Porcelanato 20kg",marca:"Votomassa",cat:"assentamento",un:"saco",preco:34.90,rend:4.5,rendTxt:"~4,5 m²/saco",cb:0.03,ic:"bag"},
+  {id:"rejunte",nome:"Rejunte Acabamento 1kg",marca:"Quartzolit",cat:"assentamento",un:"pacote",preco:12.90,rend:3.5,rendTxt:"~3,5 m²/kg",cb:0.03,ic:"bag"},
+  {id:"furadeira",nome:"Furadeira de Impacto 1/2\" 650W",marca:"Bosch GSB",cat:"ferramenta",un:"un",preco:329.90,rend:0,rendTxt:"unidade",cb:0.06,ic:"drill"},
+  {id:"parafusadeira",nome:"Parafusadeira a Bateria 12V",marca:"Dewalt",cat:"ferramenta",un:"un",preco:499.90,rend:0,rendTxt:"unidade",cb:0.06,ic:"drill"},
+  {id:"kit-brocas",nome:"Jogo de Brocas Aço Rápido 19 pçs",marca:"Bosch",cat:"ferramenta",un:"un",preco:79.90,rend:0,rendTxt:"jogo",cb:0.06,ic:"drill"},
+  {id:"serra-marmore",nome:"Serra Mármore 1400W",marca:"Makita",cat:"ferramenta",un:"un",preco:549.90,rend:0,rendTxt:"unidade",cb:0.06,ic:"drill"},
+  {id:"trena",nome:"Trena 5m Emborrachada",marca:"Vonder",cat:"ferramenta",un:"un",preco:24.90,rend:0,rendTxt:"unidade",cb:0.06,ic:"ruler"},
+  {id:"nivel-laser",nome:"Nível a Laser Verde",marca:"Bosch",cat:"ferramenta",un:"un",preco:289.90,rend:0,rendTxt:"unidade",cb:0.06,ic:"ruler"},
+  {id:"cabo",nome:"Cabo Flexível 2,5mm 100m",marca:"Sil",cat:"eletrica",un:"rolo",preco:199.90,rend:0,rendTxt:"rolo 100m",cb:0.04,ic:"bolt"},
+  {id:"disjuntor",nome:"Disjuntor Bipolar 40A",marca:"Steck",cat:"eletrica",un:"un",preco:49.90,rend:0,rendTxt:"unidade",cb:0.04,ic:"bolt"},
+  {id:"tomada",nome:"Conjunto Tomada 10A com Placa",marca:"Tramontina",cat:"eletrica",un:"un",preco:18.90,rend:0,rendTxt:"unidade",cb:0.04,ic:"bolt"},
+  {id:"quadro",nome:"Quadro de Distribuição 12 Disjuntores",marca:"Steck",cat:"eletrica",un:"un",preco:139.90,rend:0,rendTxt:"unidade",cb:0.04,ic:"bolt"},
+  {id:"tubo-esgoto",nome:"Tubo PVC Esgoto 100mm 6m",marca:"Tigre",cat:"hidraulica",un:"barra",preco:89.90,rend:0,rendTxt:"barra 6m",cb:0.04,ic:"pipe"},
+  {id:"tubo-soldavel",nome:"Tubo Soldável 25mm 6m",marca:"Tigre",cat:"hidraulica",un:"barra",preco:34.90,rend:0,rendTxt:"barra 6m",cb:0.04,ic:"pipe"},
+  {id:"registro",nome:"Registro de Gaveta 3/4\"",marca:"Docol",cat:"hidraulica",un:"un",preco:59.90,rend:0,rendTxt:"unidade",cb:0.04,ic:"pipe"},
+  {id:"vaso",nome:"Vaso Sanitário com Caixa Acoplada",marca:"Deca",cat:"louca",un:"un",preco:549.90,rend:0,rendTxt:"conjunto",cb:0.05,ic:"toilet"},
+  {id:"torneira",nome:"Torneira Monocomando Cozinha",marca:"Lorenzetti",cat:"louca",un:"un",preco:189.90,rend:0,rendTxt:"unidade",cb:0.05,ic:"tap"},
+  {id:"chuveiro",nome:"Chuveiro Eletrônico Acqua 220V",marca:"Lorenzetti",cat:"louca",un:"un",preco:159.90,rend:0,rendTxt:"unidade",cb:0.05,ic:"tap"},
+  {id:"pia-inox",nome:"Pia Inox Cozinha 1,20m",marca:"Tramontina",cat:"louca",un:"un",preco:399.90,rend:0,rendTxt:"unidade",cb:0.05,ic:"tap"},
+  {id:"cuba",nome:"Cuba de Apoio Cerâmica Banheiro",marca:"Incepa",cat:"louca",un:"un",preco:219.90,rend:0,rendTxt:"unidade",cb:0.05,ic:"tap"},
+];
+const ICONS={
+  floor:'<path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/>',
+  wall:'<rect x="3" y="4" width="18" height="16" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18M8 4v6M14 10v6M3 16h18" stroke="currentColor" stroke-width="1.4"/>',
+  paint:'<path d="M19 11V4a1 1 0 00-1-1H4a1 1 0 00-1 1v6a1 1 0 001 1h12M19 11h2v4a3 3 0 01-3 3h-2v3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  bag:'<path d="M6 8h12l-1 12a1 1 0 01-1 1H8a1 1 0 01-1-1L6 8zM9 8V6a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  drill:'<path d="M3 9h9v5H6l-2 3v-3a1 1 0 01-1-1V9zM12 10h5l3-2v6l-3-2h-5M12 14v4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  ruler:'<rect x="2" y="7" width="20" height="10" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 7v3M12 7v4M17 7v3" stroke="currentColor" stroke-width="1.4"/>',
+  bolt:'<path d="M13 2L3 14h7l-1 8 11-13h-8l1-7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  pipe:'<path d="M4 8a4 4 0 014-4h4v4H8v8h8v-4h4v4a4 4 0 01-4 4H8a4 4 0 01-4-4V8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  toilet:'<path d="M6 3h2v8H6zM5 11h10a4 4 0 01-4 4H9a4 4 0 01-4-4zM9 15l-1 6h4l-1-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  tap:'<path d="M9 21h6M12 21v-6M12 15a5 5 0 00-5-5H4M12 10V6m0 0H8m4 0h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+const fmt=n=>"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt0=n=>"R$ "+Math.round(n).toLocaleString("pt-BR");
+const mlLink=nome=>"https://lista.mercadolivre.com.br/"+encodeURIComponent(nome.replace(/["%]/g,"").trim().replace(/\s+/g,"-").toLowerCase());
+const prodById=id=>CATALOGO.find(p=>p.id===id);
+
+/* ============ STATE (localStorage) ============ */
+const LS="prumo_demo_v1";
+let store=JSON.parse(localStorage.getItem(LS)||'{"hist":[]}');
+const save=()=>localStorage.setItem(LS,JSON.stringify(store));
+let pendingList=null;
+
+/* ============ VIEW SWITCH ============ */
+function switchView(view){
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".tab,.mtab").forEach(x=>x.classList.toggle("active",x.dataset.view===view));
+  document.getElementById(view).classList.add("active");
+  if(view==="painel")renderPainel();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".tab,.mtab").forEach(t=>t.onclick=()=>switchView(t.dataset.view));
+
+/* ============ AGENTE ============ */
+const msgs=document.getElementById("msgs"),input=document.getElementById("input"),sendBtn=document.getElementById("send");
+function addUser(t){const d=document.createElement("div");d.className="m user";d.textContent=t;msgs.appendChild(d);scroll();}
+function addBot(html){const d=document.createElement("div");d.className="m bot";d.innerHTML='<div class="bubble">'+html+'</div>';msgs.appendChild(d);scroll();return d;}
+function typing(){const d=document.createElement("div");d.className="typing";d.id="typing";d.innerHTML="<span></span><span></span><span></span>";msgs.appendChild(d);scroll();}
+function stopTyping(){const t=document.getElementById("typing");if(t)t.remove();}
+function scroll(){msgs.scrollTop=msgs.scrollHeight;}
+input.oninput=()=>{input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px";};
+
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{input.value=c.dataset.q;ask();});
+sendBtn.onclick=ask;
+input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();ask();}};
+
+async function ask(){
+  const q=input.value.trim();if(!q)return;
+  addUser(q);input.value="";input.style.height="auto";sendBtn.disabled=true;
+  typing();
+  let res;
+  try{
+    const r=await fetch("/api/agent",{method:"POST",headers:{"content-type":"application/json","x-prumo":"demo"},body:JSON.stringify({demanda:q,catalogo:CATALOGO.map(({id,nome,marca,cat,un,preco,rend,rendTxt,cb})=>({id,nome,marca,cat,un,preco,rend,rendTxt,cb}))})});
+    if(!r.ok)throw new Error("http "+r.status);
+    res=await r.json();
+  }catch(e){res=localAgent(q);}
+  stopTyping();renderResposta(res);sendBtn.disabled=false;
+}
+
+function renderResposta(res){
+  const intro=res.resumo||"Montei sua lista:";
+  const bot=addBot("<strong>"+escapeHtml(intro)+"</strong>");
+  let itens=(res.itens||[]).map(it=>({...it,p:prodById(it.id)})).filter(x=>x.p);
+  if(!itens.length){bot.querySelector(".bubble").innerHTML+="<br><br>Não achei produto no catálogo da demo pra isso. Tenta descrever de outro jeito ou use uma das sugestões acima.";return;}
+  let total=0,totalCb=0;const rows=[];
+  const lista=document.createElement("div");lista.className="lista";
+  itens.forEach(({p,quantidade,justificativa})=>{
+    const qtd=Math.max(1,Math.round(quantidade||1));
+    const sub=p.preco*qtd, cbv=sub*p.cb; total+=sub; totalCb+=cbv;
+    rows.push({nome:p.nome,marca:p.marca,un:p.un,qtd,preco:p.preco,sub,cbv,rendTxt:p.rendTxt,link:mlLink(p.nome)});
+    const el=document.createElement("div");el.className="prod";
+    el.innerHTML=`<div class="prod-ic"><svg viewBox="0 0 24 24" fill="none">${ICONS[p.ic]||ICONS.bag}</svg></div>
+      <div class="prod-main"><div class="prod-nome">${escapeHtml(p.nome)}</div><div class="prod-marca">${escapeHtml(p.marca)} · ${p.rendTxt}</div>${justificativa?`<div class="prod-just">${escapeHtml(justificativa)}</div>`:""}</div>
+      <div class="prod-right"><div class="prod-qtd">${qtd} ${p.un}${qtd>1&&!["un","kg"].includes(p.un)?"s":""} · ${fmt(p.preco)}</div><div class="prod-preco">${fmt(sub)}</div><div class="prod-cb"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${fmt(cbv)}</div></div>
+      <a class="prod-buy" href="${mlLink(p.nome)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>`;
+    lista.appendChild(el);
+  });
+  const foot=document.createElement("div");foot.className="lista-foot";
+  foot.innerHTML=`<div class="lf-row"><span class="k">Total da lista</span><span class="v">${fmt(total)}</span></div>
+    <div class="lf-row cb"><span class="k">Cashback que você recebe</span><span class="v">${fmt(totalCb)}</span></div>
+    <div class="lf-row total"><span class="k">Custo real depois do cashback</span><span class="v">${fmt(total-totalCb)}</span></div>`;
+  const cta=document.createElement("button");cta.className="lf-cta";
+  cta.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Adicionar à minha obra';
+  pendingList={demanda:itens[0]?._demanda||"",total,totalCb,nItens:itens.reduce((s,x)=>s+Math.max(1,Math.round(x.quantidade||1)),0),itensCount:itens.length};
+  const demandaTxt=[...msgs.querySelectorAll(".m.user")].pop()?.textContent||"Lista";
+  cta.onclick=()=>{addToObra(demandaTxt,total,totalCb,pendingList.nItens,pendingList.itensCount);cta.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Adicionado!';cta.style.background="var(--money-deep)";cta.disabled=true;};
+  foot.appendChild(cta);
+  const acts=document.createElement("div");acts.className="lista-actions";
+  const waBtn=document.createElement("button");waBtn.className="la-btn wa";
+  waBtn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2Zm0 18.15h-.01a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.18 8.18 0 01-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 012.41 5.83c0 4.54-3.69 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.16 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>Enviar no WhatsApp';
+  waBtn.onclick=()=>shareWhats(demandaTxt,rows,total,totalCb);
+  const pdfBtn=document.createElement("button");pdfBtn.className="la-btn";
+  pdfBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Exportar PDF';
+  pdfBtn.onclick=()=>exportPDF(demandaTxt,rows,total,totalCb);
+  acts.appendChild(waBtn);acts.appendChild(pdfBtn);foot.appendChild(acts);
+  bot.appendChild(lista);bot.appendChild(foot);scroll();
+}
+
+function addToObra(demanda,total,cb,nItens,itensCount){
+  store.hist.unshift({demanda,total,cb,nItens,itensCount,data:Date.now()});save();
+  updateAside();toast("Lista salva em Minha obra");
+}
+
+/* ============ COMPARTILHAR / EXPORTAR ============ */
+function buildListText(demanda,rows,total,totalCb){
+  let t="*Prumo · Lista de compra*\n";
+  if(demanda)t+=demanda+"\n";
+  t+="\n";
+  rows.forEach(r=>{
+    const un=r.qtd>1&&!["un","kg"].includes(r.un)?r.un+"s":r.un;
+    t+="• "+r.qtd+" "+un+" · "+r.nome+" ("+r.marca+")\n";
+    t+="   "+fmt(r.sub)+" · cashback "+fmt(r.cbv)+"\n";
+    t+="   "+r.link+"\n";
+  });
+  t+="\nTotal da lista: "+fmt(total)+"\n";
+  t+="Cashback Prumo: "+fmt(totalCb)+"\n";
+  t+="Custo real depois do cashback: "+fmt(total-totalCb)+"\n";
+  t+="\nLista gerada no Prumo · prumo.mondo-ia.com.br";
+  return t;
+}
+async function shareWhats(demanda,rows,total,totalCb){
+  const txt=buildListText(demanda,rows,total,totalCb);
+  if(navigator.share){try{await navigator.share({title:"Prumo · Lista de compra",text:txt});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank","noopener");
+}
+function exportPDF(demanda,rows,total,totalCb){
+  const data=new Date().toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
+  const linhas=rows.map(r=>{
+    const un=r.qtd>1&&!["un","kg"].includes(r.un)?r.un+"s":r.un;
+    return `<tr><td class="q">${r.qtd} ${un}</td><td><div class="pn">${escapeHtml(r.nome)}</div><div class="pm">${escapeHtml(r.marca)} · ${escapeHtml(r.rendTxt||"")}</div></td><td class="n">${fmt(r.preco)}</td><td class="n">${fmt(r.sub)}</td><td class="n cb">${fmt(r.cbv)}</td></tr>`;
+  }).join("");
+  const html=`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prumo · Lista de compra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;color:#16140f;padding:38px 40px;font-variant-numeric:tabular-nums}
+.head{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #16140f;padding-bottom:16px;margin-bottom:6px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:21px;letter-spacing:-.02em}
+.brand svg{width:24px;height:24px;color:#e8821e}
+.meta{text-align:right;font-size:11.5px;color:#55514a;line-height:1.5}
+.dem{margin:18px 0 14px;font-size:13px;color:#55514a}
+.dem b{color:#16140f;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#8a857c;font-weight:700;padding:0 8px 8px;border-bottom:1px solid #e7e5e0}
+thead th.n{text-align:right}
+tbody td{padding:11px 8px;border-bottom:1px solid #f0eee9;vertical-align:top}
+td.q{font-weight:700;white-space:nowrap;color:#c96a0f}
+td.n{text-align:right;font-weight:600;white-space:nowrap}
+td.cb{color:#147a52}
+.pn{font-weight:600}
+.pm{font-size:11px;color:#8a857c;margin-top:2px}
+.tot{margin-top:20px;margin-left:auto;width:300px}
+.tr{display:flex;justify-content:space-between;font-size:13px;padding:7px 0}
+.tr+.tr{border-top:1px dashed #e7e5e0}
+.tr b{font-weight:700}
+.tr.cb{color:#147a52}
+.tr.real{border-top:2px solid #16140f;margin-top:4px;padding-top:11px;font-size:16px;font-weight:800}
+.foot{margin-top:34px;padding-top:14px;border-top:1px solid #e7e5e0;font-size:10.5px;color:#8a857c;line-height:1.6}
+@media print{body{padding:0}@page{margin:18mm}}
+</style></head><body>
+<div class="head">
+  <div class="brand"><svg viewBox="0 0 32 36" fill="none"><path d="M16 1v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="currentColor"/></svg>Prumo</div>
+  <div class="meta">Lista de compra para obra<br>${data}</div>
+</div>
+${demanda?`<div class="dem">Pedido: <b>${escapeHtml(demanda)}</b></div>`:'<div class="dem"></div>'}
+<table><thead><tr><th>Qtd</th><th>Produto</th><th class="n">Unitário</th><th class="n">Subtotal</th><th class="n">Cashback</th></tr></thead><tbody>${linhas}</tbody></table>
+<div class="tot">
+  <div class="tr"><span>Total da lista</span><b>${fmt(total)}</b></div>
+  <div class="tr cb"><span>Cashback que você recebe</span><b>${fmt(totalCb)}</b></div>
+  <div class="tr real"><span>Custo real</span><b>${fmt(total-totalCb)}</b></div>
+</div>
+<div class="foot">Lista gerada pelo Prumo · Plataforma de compra inteligente para obra · prumo.mondo-ia.com.br<br>Os preços são estimativas de catálogo e podem variar no momento da compra.</div>
+<scr"+"ipt>window.onload=function(){setTimeout(function(){window.print();},350);};</scr"+"ipt>
+</body></html>`;
+  const w=window.open("","_blank");
+  if(!w){toast("Permita pop-ups para exportar o PDF");return;}
+  w.document.open();w.document.write(html);w.document.close();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ============ FALLBACK LOCAL (demo nunca quebra) ============ */
+function localAgent(q){
+  const t=q.toLowerCase();const itens=[];const num=(t.match(/(\d+[.,]?\d*)\s*m/)||[])[1];
+  const area=num?parseFloat(num.replace(",",".")):0;
+  const add=(id,qt,j)=>itens.push({id,quantidade:qt,justificativa:j});
+  if(/piso|porcelanato|cerâmic|ceramic/.test(t)){const a=area||20;const cx=Math.ceil(a*1.1/2.18);add("porcelanato-bege",cx,`${a}m² + 10% de perda ÷ 2,18m²/cx`);add("argamassa-ac3",Math.ceil(a/4.5),`${a}m² ÷ 4,5m²/saco`);add("rejunte",Math.ceil(a/3.5),"acabamento das juntas");}
+  if(/pint|tinta|parede|teto/.test(t)){const a=area||30;const mult=/2 quart|dois quart/.test(t)?2:1;const m=a*mult*2.2;add("tinta-branca",Math.ceil(m/150),`~${Math.round(m)}m² de parede ÷ 150m²/lata`);add("massa-corrida",1,"correção das paredes");add("selador",1,"selar antes de pintar");}
+  if(/elétric|eletric|fio|cabo|tomada|disjuntor/.test(t)){add("cabo",1,"rolo p/ o cômodo");add("disjuntor",1,"proteção do circuito");add("tomada",4,"4 pontos no cômodo");add("quadro",/quadro|distribu/.test(t)?1:0,"");}
+  if(/ferrament|furad|reforma|kit/.test(t)){add("furadeira",1,"base de qualquer reforma");add("kit-brocas",1,"brocas p/ alvenaria e madeira");add("trena",1,"medição");add("nivel-laser",1,"nivelar piso e quadro");}
+  if(/banheir/.test(t)){const a=area||6;add("vaso",1,"vaso + caixa acoplada");add("chuveiro",1,"chuveiro eletrônico");add("torneira",1,"torneira do lavatório");add("porcelanato-bege",Math.ceil(a*1.1/2.18),`piso ${a}m²`);add("argamassa-ac3",Math.ceil(a/4.5),"assentamento");}
+  if(/cozinh/.test(t)){add("pia-inox",1,"pia da cozinha");add("torneira",1,"torneira monocomando");}
+  const seen=new Set();const final=itens.filter(i=>i.quantidade>0&&!seen.has(i.id)&&seen.add(i.id));
+  return{resumo:final.length?"Montei uma lista pro que você descreveu:":"",itens:final};
+}
+
+/* ============ PAINEL ============ */
+function updateAside(){
+  const cb=store.hist.reduce((s,h)=>s+h.cb,0);
+  document.getElementById("aside-cb").textContent=fmt0(cb);
+  document.getElementById("aside-listas").textContent=store.hist.length;
+}
+function renderPainel(){
+  const cb=store.hist.reduce((s,h)=>s+h.cb,0);
+  const gmv=store.hist.reduce((s,h)=>s+h.total,0);
+  const itens=store.hist.reduce((s,h)=>s+(h.nItens||0),0);
+  document.getElementById("st-cb").textContent=fmt0(cb);
+  document.getElementById("st-gmv").textContent=fmt0(gmv);
+  document.getElementById("st-listas").textContent=store.hist.length;
+  document.getElementById("st-itens").textContent=itens;
+  const h=document.getElementById("hist");
+  if(!store.hist.length){h.innerHTML=`<div class="hist-empty"><svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><p>Você ainda não salvou nenhuma lista.<br>Use o agente pra montar sua primeira compra.</p><button onclick="document.querySelector('.tab[data-view=agente]').click()">Abrir o agente</button></div>`;return;}
+  h.innerHTML='<div class="hist-list">'+store.hist.map(it=>`<div class="hist-item"><div class="hist-top"><div class="hist-q">${escapeHtml(it.demanda)}</div><div class="hist-date">${new Date(it.data).toLocaleDateString("pt-BR")}</div></div><div class="hist-meta"><div><b>${it.itensCount}</b> produtos · <b>${it.nItens}</b> itens</div><div>Total <b>${fmt(it.total)}</b></div><div class="cbv">Cashback <b class="cbv">${fmt(it.cb)}</b></div></div></div>`).join("")+'</div>';
+}
+
+/* ============ OFERTAS (feed) ============ */
+function renderFeed(){
+  const destaques=[
+    {p:prodById("furadeira"),txt:"<b>Oferta do dia</b> 🔨 A furadeira que todo mundo pede. Bosch com 650W de potência, ideal pra furar concreto e alvenaria. Cashback Prumo embutido."},
+    {p:prodById("porcelanato-bege"),txt:"<b>Piso em conta</b> Porcelanato acetinado bege 60x60 da Portinari. Acabamento fino por menos de R$ 90 a caixa."},
+    {p:prodById("tinta-branca"),txt:"<b>Pra fechar a obra</b> Tinta acrílica premium Suvinil 18L. Rende ~150m² em duas demãos, dá pra pintar um apê inteiro."},
+    {p:prodById("vaso"),txt:"<b>Louça com cashback</b> Vaso Deca com caixa acoplada. Saída de água e fixação inclusas. Qualidade que não dá dor de cabeça depois."},
+  ];
+  const wrap=document.getElementById("feed-msgs");
+  wrap.innerHTML=destaques.map(({p,txt})=>{
+    const cbv=p.preco*p.cb;
+    return `<div class="wa-msg"><div class="wt">${txt}</div><div class="wa-prod"><div class="pi"><svg viewBox="0 0 24 24" fill="none">${ICONS[p.ic]}</svg></div><div class="pm"><div class="pn">${escapeHtml(p.nome)}</div><div class="pp">${fmt(p.preco)}</div><div class="pc"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${fmt(cbv)} de cashback</div></div><a class="pg" href="${mlLink(p.nome)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="wa-time">09:${12+destaques.indexOf(destaques.find(d=>d.p===p))} ✓✓</div></div>`;
+  }).join("");
+}
+
+/* ============ TOAST ============ */
+let toastT;
+function toast(t){const el=document.getElementById("toast");document.getElementById("toast-t").textContent=t;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),2400);}
+
+/* ============ INIT ============ */
+updateAside();renderFeed();
+</script>
+</body>
+</html>
