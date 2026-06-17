@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prumo · A plataforma de compra inteligente do profissional de obra</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316140f'/%3E%3Cpath d='M11.5 6.2h9' stroke='%23e8821e' stroke-width='1.7' stroke-linecap='round'/%3E%3Cpath d='M16 6.2v6.3' stroke='%23e8821e' stroke-width='1.7' stroke-linecap='round'/%3E%3Cpath d='M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z' fill='%23e8821e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -299,6 +300,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .gap-tbl tr.us{background:rgba(232,130,30,.1)}
 .gap-tbl tr.us td:first-child{color:var(--amber)}
 .gap-tbl tr.us td{font-weight:600}
+.gap-lede{color:#b8b3a8;font-size:15px;max-width:62ch;margin:-8px 0 22px;line-height:1.55}
+.gap-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius)}
+.gap-tbl th br{display:none}
+.gap-synth{display:flex;gap:16px;align-items:flex-start;margin-top:22px;padding:20px 22px;background:rgba(232,130,30,.08);border:1px solid rgba(232,130,30,.22);border-radius:var(--radius)}
+.gap-synth-mk{flex:none;width:38px;height:38px;border-radius:10px;background:rgba(232,130,30,.14);display:flex;align-items:center;justify-content:center;color:var(--amber)}
+.gap-synth-mk svg{width:21px;height:21px}
+.gap-synth strong{color:#fff}
+.gap-synth div:last-child{color:#cfcabf;font-size:15px;line-height:1.6}
+@media(max-width:680px){.gap-tbl th,.gap-tbl td{padding:12px 12px;font-size:12.5px}.gap-tbl th br{display:block}}
 
 /* ---------- UNIT ECON ---------- */
 .econ-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:42px}
@@ -397,7 +407,7 @@ footer{padding:46px 0;border-top:1px solid var(--line)}
 <nav>
   <div class="wrap nav-in">
     <div class="brand">
-      <svg class="mk" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 6l8 4.5v9L16 24l-8-4.5v-9L16 6z" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 6v18M8 10.5l8 4.5 8-4.5" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg>
+      <svg class="mk" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M11.5 6.2h9" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.2v6.3" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/><path d="M16 12.8V25" stroke="#16140f" stroke-width="1" stroke-opacity=".38"/></svg>
       Prumo
     </div>
     <div class="nav-links">
@@ -436,7 +446,7 @@ footer{padding:46px 0;border-top:1px solid var(--line)}
       <div class="phone">
         <div class="phone-screen">
           <div class="wa-head">
-            <div class="wa-ava"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 7l7 4v8l-7 4-7-4v-8l7-4z" stroke="#e8821e" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg></div>
+            <div class="wa-ava"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M11.5 6.5h9" stroke="#e8821e" stroke-width="1.5" stroke-linecap="round"/><path d="M16 6.5v6" stroke="#e8821e" stroke-width="1.5" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/></svg></div>
             <div><div class="wa-name">Prumo</div><div class="wa-status"><span class="on"></span>online</div></div>
           </div>
           <div class="wa-body" id="waBody">
@@ -582,7 +592,7 @@ footer{padding:46px 0;border-top:1px solid var(--line)}
 
       <div class="chat rv">
         <div class="chat-head">
-          <div class="ava"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4.5v9L12 22l-8-6.5v-9L12 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="10.5" r="2" fill="#fff"/></svg></div>
+          <div class="ava"><svg viewBox="0 0 24 24" fill="none"><path d="M8.5 4h7" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M12 4v5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M12 9c-2 0-3.3 1.3-3.3 3.1 0 2.2 1.7 4.1 3.3 7.4 1.6-3.3 3.3-5.2 3.3-7.4 0-1.8-1.3-3.1-3.3-3.1Z" fill="#fff"/></svg></div>
           <div><div class="nm">Agente Prumo</div><div class="st"><span class="on"></span>respondendo na hora</div></div>
         </div>
         <div class="chat-body" id="chatBody">
@@ -666,17 +676,28 @@ footer{padding:46px 0;border-top:1px solid var(--line)}
     <div class="market-foot mono rv">Fontes: ABRAMAT / ANAMACO · Perplexity Deep Research, jun/2026.</div>
 
     <div class="gap rv">
-      <h3>Ninguém junta as quatro peças que importam</h3>
+      <h3>Ninguém junta as cinco peças que importam</h3>
+      <p class="gap-lede">O mercado já está cheio de players. Mas cada um acerta no máximo uma peça. Mapeamos os que mais se aproximam do nosso cliente e nenhum integra a jornada inteira.</p>
+      <div class="gap-scroll">
       <table class="gap-tbl">
-        <thead><tr><th>Player</th><th>Cashback real</th><th>Busca por demanda</th><th>Foco no profissional</th><th>Dentro do WhatsApp</th></tr></thead>
+        <thead><tr><th>Player</th><th>Cashback <br>agnóstico</th><th>Origina <br>a demanda</th><th>Compra <br>inteligente</th><th>Gestão <br>da obra</th><th>Comunidade <br>e reputação</th></tr></thead>
         <tbody>
-          <tr><td>Méliuz / cashback geral</td><td class="yes">Sim</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
-          <tr><td>Apps das redes (Leroy, etc.)</td><td class="no">Fraco</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
-          <tr><td>Marketplaces (ML, Amazon)</td><td class="no">Não</td><td class="no">Busca crua</td><td class="no">Não</td><td class="no">Não</td></tr>
-          <tr><td>Clubes de fidelidade de loja</td><td class="no">Pontos</td><td class="no">Não</td><td class="no">Parcial</td><td class="no">Não</td></tr>
-          <tr class="us"><td>Prumo</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td></tr>
+          <tr><td>Juntos Somos Mais</td><td class="no">Pontos</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td><td class="no">Parcial</td></tr>
+          <tr><td>Obramax (atacarejo)</td><td class="no">Não</td><td class="no">Não</td><td class="no">Parcial</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Méliuz / Cuponomia</td><td class="yes">Sim</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Loft / Triider / GetNinjas</td><td class="no">Não</td><td class="no">Vende lead</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td></tr>
+          <tr><td>Grupos de WhatsApp</td><td class="no">Não</td><td class="no">Parcial</td><td class="no">Não</td><td class="no">Não</td><td class="yes">Sim</td></tr>
+          <tr><td>Obra Prima / Vobi / Sienge</td><td class="no">Não</td><td class="no">Não</td><td class="no">Não</td><td class="yes">Sim</td><td class="no">Não</td></tr>
+          <tr class="us"><td>Prumo</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td><td class="yes">Sim</td></tr>
         </tbody>
       </table>
+      </div>
+      <div class="gap-synth rv">
+        <div class="gap-synth-mk"><svg viewBox="0 0 24 24" fill="none"><path d="M5.5 4h13M12 4v6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 10.5c-3 0-5 2-5 4.8 0 3.3 2.6 6.3 5 11.2 2.4-4.9 5-7.9 5-11.2 0-2.8-2-4.8-5-4.8Z" fill="currentColor"/></svg></div>
+        <div>
+          <strong>O vazio de integração.</strong> Não competimos de frente com nenhum deles. Ocupamos o espaço entre todos: o único lugar onde o profissional encontra a demanda, compra o material do jeito mais inteligente, ganha cashback de verdade sem amarra de marca, organiza a obra e constrói reputação. Tudo dentro do WhatsApp.
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -797,7 +818,7 @@ footer{padding:46px 0;border-top:1px solid var(--line)}
 <footer>
   <div class="wrap foot-in">
     <div>
-      <div class="foot-brand"><svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M16 6l8 4.5v9L16 24l-8-4.5v-9L16 6z" stroke="#e8821e" stroke-width="1.6" stroke-linejoin="round"/><circle cx="16" cy="15" r="2" fill="#e8821e"/></svg>Prumo</div>
+      <div class="foot-brand"><svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#16140f"/><path d="M11.5 6.2h9" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.2v6.3" stroke="#e8821e" stroke-width="1.6" stroke-linecap="round"/><path d="M16 12.5c-2.5 0-4.2 1.7-4.2 4 0 2.8 2.2 5.3 4.2 9.5 2-4.2 4.2-6.7 4.2-9.5 0-2.3-1.7-4-4.2-4Z" fill="#e8821e"/><path d="M16 12.8V25" stroke="#16140f" stroke-width="1" stroke-opacity=".38"/></svg>Prumo</div>
       <div class="foot-meta" style="margin-top:10px">Compra inteligente para o profissional de obra.</div>
     </div>
     <div class="foot-meta" style="text-align:right">
